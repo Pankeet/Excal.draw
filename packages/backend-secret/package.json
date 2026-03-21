@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b",
-    "dev": "tsc -b && node index.js"
+    "dev": "tsc -b && node dist/index.js"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
