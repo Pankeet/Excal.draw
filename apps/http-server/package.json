@@ -4,17 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build" : "tsc -b",
+    "build": "tsc -b",
     "start": "node dist/index.js",
-    "dev" : "tsc -b && node dist/index.js"
+    "dev": "tsc -b && node dist/index.js"
   },
   "dependencies": {
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10"
   },
   "keywords": [],
   "author": "",
