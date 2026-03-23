@@ -1,19 +1,15 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import * as z from "zod";
 import { SALT_ROUNDS  } from "@repo/backend-secret/dist/index.js";
 import { JWT_SECRET } from "@repo/backend-secret/dist/index.js"; 
 import { prisma } from "./config/prisma-config.js";
+import { User } from "./zod/types.js";
+import validate_user from "./middlewares/validate-user.js";
 
 const app = express()
 app.use(express.json());
 
-const User = z.object({
-    username : z.string(),
-    email : z.email(),
-    password : z.string().trim().min(5)
-})
 
 // SignUp Endpoint Completed (✔️)
 app.post("/signup", async (req , res) => {
@@ -40,7 +36,6 @@ app.post("/signup", async (req , res) => {
                     message : "User Created Successfully !"
                 });
         }   catch(err){
-                console.error(err);
                 return res.status(500).json({
                     message : "User cannot be created ! Please try again later "
                 });
@@ -66,7 +61,7 @@ app.post("/signin", async (req , res) => {
         for (const user of findUser){
             var password_cmp = await bcrypt.compare(password, user.password)
             if(password_cmp) {
-                const token = jwt.sign({userId : user.id,email : user.email},JWT_SECRET,{"expiresIn": '1h'});
+                const token = jwt.sign({userId : user.id,email : user.email},JWT_SECRET,{"expiresIn": '6h'});
                 return res.status(200).json({
                     message : "Signin Successful",
                     token : token
@@ -79,9 +74,25 @@ app.post("/signin", async (req , res) => {
     }
 });
 
-// Room Creation Endpoint
-app.post("/room",  async (req , res) => {
-    
-})
+// Room Creation Endpoint Completed (✔️)
+app.post("/create-room",validate_user, async (req , res) => {
+    const userId = req.userId;
+    const roomName  = req.body.name;
+    try{
+        const create_room = await prisma.room.create({
+            data:{
+                slug : roomName,
+                adminId : userId
+            }
+        })
+        res.status(200).json({
+            roomId : create_room.id
+        })
+    }catch(err){
+        return res.status(500).json({
+            message : "Cannot create room ! Please Try again later"
+        })
+    }
+});
 
 app.listen(3001);
