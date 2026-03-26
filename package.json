@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "concurrently \"pnpm --filter http-server dev\" \"pnpm --filter ws-server dev\"",
+    "dev": "concurrently -n DB,HTTP,WS,FE -c green,blue,yellow,magenta \"pnpm --filter @repo/db-local dev\" \"pnpm --filter http-server dev\" \"pnpm --filter ws-server dev\" \"pnpm --filter excal_fe dev\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"

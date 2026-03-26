@@ -2,9 +2,10 @@
   "name": "@repo/db-local",
   "version": "1.0.0",
   "description": "",
+  "main": "config/prisma-config.js",
   "scripts": {
-    "build": "npx prisma generate",
-    "config": "tsc -b",
+    "config": "prisma generate",
+    "build": "tsc -b",
     "dev": "tsc -b && node config/prisma-config.js"
   },
   "keywords": [],
@@ -12,13 +13,13 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@prisma/client": "^7.5.0",
     "prisma": "^7.5.0",
     "typescript": "^5.9.3",
     "@repo/backend-secret": "workspace:*",
     "@types/pg": "^8.20.0"
   },
   "dependencies": {
+    "@prisma/client": "^7.5.0",
     "@prisma/adapter-pg": "^7.5.0"
   }
 }
