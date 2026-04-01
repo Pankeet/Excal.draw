@@ -1,8 +1,8 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Button } from "../components/Button";
-import { InputBox } from "../components/input";
+import { Button } from "@repo/ui/button";
+import { InputBox } from "@repo/ui/input";
 import { useState } from "react";
 
 export default function SignUp(){

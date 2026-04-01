@@ -2,8 +2,8 @@
 import { useState } from "react";
 import  axios  from "axios";
 import { useRouter } from "next/navigation";
-import { InputBox } from "../components/input";
-import { Button } from "../components/Button";
+import { InputBox } from "@repo/ui/input";
+import { Button } from "@repo/ui/button";
 
 export default function Signin(){
     const [username, setUsername] = useState("");

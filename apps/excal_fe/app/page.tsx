@@ -1,7 +1,8 @@
 export default function Home() {
+
   return (
     <div>
-      Hi there
+      <div className="text-6xl text-amber-500"> Chat Room !</div>
     </div>
   );
 }
