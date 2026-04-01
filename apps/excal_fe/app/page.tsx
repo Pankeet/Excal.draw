@@ -1,8 +1,10 @@
-export default function Home() {
+export default function Home() {  
 
   return (
     <div>
-      <div className="text-6xl text-amber-500"> Chat Room !</div>
+      <h1 className="text-3xl font-serif">
+        Excal.Com
+      </h1>
     </div>
   );
 }
