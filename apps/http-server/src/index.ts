@@ -86,7 +86,7 @@ app.post("/api/v1/signin", async (req , res) => {
 });
 
 // Room Creation Endpoint Completed (✔️)
-app.post("/create-room",validate_user, async (req , res) => {
+app.post("/api/v1/create-room",validate_user, async (req , res) => {
     const userId = req.userId;
     const roomName  = req.body.name;
     try{
@@ -106,7 +106,7 @@ app.post("/create-room",validate_user, async (req , res) => {
     }
 });
 
-app.get('/chats/:roomId',validate_user, async (req, res) => {
+app.get('/api/v1/chats/:roomId',validate_user, async (req, res) => {
     const roomId = Number(req.params.roomId);
     try{
         const messages = await prisma.chat.findMany({
