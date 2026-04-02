@@ -21,7 +21,7 @@ export default function Canvas({roomId,socket} : {roomId : string;socket:WebSock
         }
       } 
     }
-  },[roomId]); 
+  },[socket,roomId]); 
 
    return (
     <div>

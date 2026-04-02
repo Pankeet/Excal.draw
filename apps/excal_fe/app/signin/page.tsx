@@ -17,6 +17,7 @@ export default function Signin(){
         try{
             const res = await axios.post("http://localhost:8000/api/v1/signin", data);
             alert(res.data.message);
+            localStorage.setItem("token", res.data.token);
             router.push("/");        
         }catch (e: unknown) {
             if (axios.isAxiosError(e)) {

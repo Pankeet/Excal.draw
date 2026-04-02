@@ -152,6 +152,7 @@ wss.on("connection", (ws, request) => {
             roomId : Number(roomId)
           }
         })
+        
         user.socket.send(JSON.stringify({
             type: "chat",
             from: userId,
