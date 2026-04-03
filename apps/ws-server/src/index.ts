@@ -133,6 +133,14 @@ if (existingUser) {
     if (parseData.type === "chat") {
       const { roomId , message } = parseData;
 
+      // await prisma.chat.create({
+      //     data : {
+      //       message : message,
+      //       userId : userId,
+      //       roomId : Number(roomId)
+      //     }
+      // });
+
       if (!user.rooms.has(roomId)) {
         sendError(ws, "Join room first");
         return;
@@ -144,19 +152,12 @@ if (existingUser) {
         return;
       }
 
-      // await prisma.chat.create({
-      //     data : {
-      //       message : message,
-      //       userId : userId,
-      //       roomId : Number(roomId)
-      //     }
-      // });
 
       for (const uid of roomUsers) {
         const Targetuser = users.get(uid);
         if (!Targetuser) continue;
         
-        for (const socket of user.sockets) {
+        for (const socket of Targetuser.sockets) {
           socket.send(JSON.stringify({
               type: "chat",
               from: userId,
