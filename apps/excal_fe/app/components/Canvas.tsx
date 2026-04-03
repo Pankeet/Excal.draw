@@ -4,24 +4,15 @@ import { initDraw } from "../draw";
 export default function Canvas({roomId,socket} : {roomId : string;socket:WebSocket}){
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-     useEffect(() => {
-    const canvas = canvasRef.current;
-    if(canvas) {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      initDraw(canvas,roomId,socket);
-    } 
-
-    return () => {
+    useEffect(() => {
+      const canvas = canvasRef.current;
       if(canvas) {
-        const ctx = canvas.getContext("2d");
-        if(ctx) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        initDraw(canvas,roomId,socket);
       } 
-    }
-  },[socket,roomId]); 
+    },[roomId,socket]); 
 
    return (
     <div>

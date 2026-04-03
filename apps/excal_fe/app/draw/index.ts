@@ -51,73 +51,82 @@ async function getexsistingShapes(roomId : string ){
     return shapes;
 }
 
-export async function initDraw(canvas : HTMLCanvasElement , roomId : string , socket : WebSocket) {
+export async function initDraw(
+  canvas: HTMLCanvasElement,
+  roomId: string,
+  socket: WebSocket
+) {
+  const exsistingshapes: Shape[] = await getexsistingShapes(roomId);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return () => {};
 
-        const exsistingshapes: Shape[] = await getexsistingShapes(roomId);
-        const ctx = canvas.getContext("2d");
-        if(!ctx) return;
+  const handleMessage = (event: MessageEvent) => {
+    const message = JSON.parse(event.data);
+    if (message.type === "chat") {
+      const parsedShape = JSON.parse(message.message);
+      exsistingshapes.push(parsedShape);
+      preCanvas(exsistingshapes, ctx, canvas);
+    }
+  };
 
-        socket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            if(message.type == "chat"){
-                const parsedShape = JSON.parse(message.message)
-                exsistingshapes.push(parsedShape);
-                preCanvas(exsistingshapes,ctx,canvas);
-            }
-        }
+  socket.onmessage = handleMessage;
 
-        ctx.fillStyle = "rgba(0,0,0)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+  let clicked = false;
+  let startX = 0;
+  let startY = 0;
 
-        preCanvas(exsistingshapes,ctx,canvas);
+  const handleMouseDown = (e: MouseEvent) => {
+    clicked = true;
+    const pos = getMousePos(canvas, e);
+    startX = pos.x;
+    startY = pos.y;
+  };
 
-        let clicked = false;
-        let startX = 0;
-        let startY = 0;
-        
-        canvas.addEventListener("mousedown",(e) => {
-            clicked = true;
-            const pos = getMousePos(canvas,e);
-            startX = pos.x;
-            startY = pos.y;
-        });
+  const handleMouseUp = (e: MouseEvent) => {
+    clicked = false;
+    const pos = getMousePos(canvas, e);
+    const width = pos.x - startX;
+    const height = pos.y - startY;
 
-        canvas.addEventListener("mouseup", (e) => {
-            clicked = false;
-            const pos = getMousePos(canvas,e);
-            const width = pos.x - startX;
-            const height = pos.y - startY;
+    const shape = {
+      type: "rect" as const,
+      x: startX,
+      y: startY,
+      width,
+      height,
+    };
 
-            exsistingshapes.push({
-                type : "rect",
-                x : startX,
-                y : startY,
-                width : width,
-                height : height
-            })
+    exsistingshapes.push(shape);
+    socket.send(
+      JSON.stringify({
+        type: "chat",
+        roomId,
+        message: JSON.stringify(shape),
+      })
+    );
+  };
 
-            socket.send(JSON.stringify({
-                type: "chat",
-                roomId : roomId,
-                message : JSON.stringify({
-                    type : "rect",
-                    x : startX,
-                    y : startY,
-                    width : width,
-                    height : height
-                })
-            }));
-        })
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!clicked) return;
+    const pos = getMousePos(canvas, e);
+    const width = pos.x - startX;
+    const height = pos.y - startY;
+    preCanvas(exsistingshapes, ctx, canvas);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(startX, startY, width, height);
+  };
 
-        canvas.addEventListener("mousemove", (e) => {   
-            if(clicked) {
-                const pos = getMousePos(canvas,e);
-                const width = pos.x - startX;
-                const height = pos.y - startY;
-                preCanvas(exsistingshapes,ctx,canvas);
-                ctx.strokeStyle = "white";
-                ctx.lineWidth = 2;
-                ctx.strokeRect(startX, startY, width, height);
-            }
-        });
+  canvas.addEventListener("mousedown", handleMouseDown);
+  canvas.addEventListener("mouseup", handleMouseUp);
+  canvas.addEventListener("mousemove", handleMouseMove);
+
+  preCanvas(exsistingshapes, ctx, canvas);
+
+  return () => {
+    canvas.removeEventListener("mousedown", handleMouseDown);
+    canvas.removeEventListener("mouseup", handleMouseUp);
+    canvas.removeEventListener("mousemove", handleMouseMove);
+    socket.onmessage = null;
+  };
 }

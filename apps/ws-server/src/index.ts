@@ -9,13 +9,12 @@ interface DecodedToken {
 }
 
 type ClientMessage =
-    | { type: "create"; roomId: string } 
     | { type: "join"; roomId: string }
     | { type: "leave"; roomId: string }
     | { type: "chat"; roomId: string; message: string };
 
 type UserData = {
-  socket: WebSocket;
+  sockets: Set<WebSocket>;
   rooms: Set<string>;
 };
 
@@ -57,7 +56,16 @@ wss.on("connection", (ws, request) => {
     return;
   }
 
-  users.set(userId, {socket: ws,rooms: new Set(),});
+  const existingUser = users.get(userId);
+
+if (existingUser) {
+  existingUser.sockets.add(ws);
+} else {
+  users.set(userId, {
+    sockets: new Set([ws]),
+    rooms: new Set(),
+  });
+}
 
   ws.on("message", async (data) => {
     const user = users.get(userId);
@@ -72,38 +80,33 @@ wss.on("connection", (ws, request) => {
       return;
     }
 
-// Create Room
-    if(parseData.type === 'create'){
-        const roomId = parseData.roomId;
-        if (rooms.has(roomId)) {
-            sendError(ws, "Room already exists");
-            return;
-          }
-        rooms.set(roomId,new Set());
-        rooms.get(roomId)!.add(userId);
-        user.rooms.add(roomId);
-        ws.send(JSON.stringify({
-            type: "created",
-            roomId,
-          }));
-          return ;
-    }
+ if (parseData.type === "join") {
+  const roomId = parseData.roomId;
 
-// Join Room
-    if (parseData.type === "join"){
-      const room = rooms.get(parseData.roomId);
+  let room = rooms.get(roomId);
 
-      if (!room) {
-        sendError(ws, "Room does not exist");
-        return;
-      }
+  // If room doesn't exist → create it
+  if (!room) {
+    room = new Set();
+    rooms.set(roomId, room);
 
-      room.add(userId);
-      user.rooms.add(parseData.roomId);
+    ws.send(JSON.stringify({
+      type: "created",
+      roomId,
+    }));
+  } else {
+    ws.send(JSON.stringify({
+      type: "joined",
+      roomId,
+    }));
+  }
 
-      ws.send(JSON.stringify({ type: "joined", roomId: parseData.roomId }));
-      return;
-    }
+  // Common logic (runs for both cases)
+  room.add(userId);
+  user.rooms.add(roomId);
+
+  return;
+}
 
 // Leave Room
     if (parseData.type === "leave") {
@@ -141,37 +144,43 @@ wss.on("connection", (ws, request) => {
         return;
       }
 
-      for (const uid of roomUsers) {
-        const user = users.get(uid);
-        if (!user) continue;
+      // await prisma.chat.create({
+      //     data : {
+      //       message : message,
+      //       userId : userId,
+      //       roomId : Number(roomId)
+      //     }
+      // });
 
-        await prisma.chat.create({
-          data : {
-            message : message,
-            userId : userId,
-            roomId : Number(roomId)
-          }
-        })
+      for (const uid of roomUsers) {
+        const Targetuser = users.get(uid);
+        if (!Targetuser) continue;
         
-        user.socket.send(JSON.stringify({
-            type: "chat",
-            from: userId,
-            roomId,
-            message,
-          })
-        );
+        for (const socket of user.sockets) {
+          socket.send(JSON.stringify({
+              type: "chat",
+              from: userId,
+              roomId,
+              message,
+            })
+          );
+        }
       }
     }
+     return;
   });
 
   ws.on("close", () => {
-    const user = users.get(userId);
-    if (!user) return;
+  const user = users.get(userId);
+  if (!user) return;
 
+  user.sockets.delete(ws);
+
+  if (user.sockets.size === 0) {
     for (const roomId of user.rooms) {
       rooms.get(roomId)?.delete(userId);
     }
-
     users.delete(userId);
+  }
   });
 });
