@@ -1,9 +1,14 @@
 "use client"
 import gsap from "gsap";
-import { useLayoutEffect, useRef } from "react";
+import { Button } from "@repo/ui/button";
+import { InputBox } from "@repo/ui/input";
+import { useLayoutEffect, useRef , useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ChatPage() {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [ roomName , setroomName] = useState("");
+    const router = useRouter();
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
@@ -14,14 +19,22 @@ export default function ChatPage() {
         return () => ctx.revert(); 
     }, []);
 
+    function create_room(){
+        router.push(`/chat/${roomName}`);
+    }
+
     return (
-        <div ref={containerRef} className="flex flex-col items-center h-screen mt-28">
-            <h1 className="text-4xl font-bold font-serif mb-4">
-                Welcome to the Chat Page!
+        <div ref={containerRef} className="grid place-content-center h-screen">
+            <h1 className="lg:text-4xl text-lg font-bold font-serif mb-4">
+                Welcome to the <b className="text-purple-600">Chat Page !</b>
             </h1>
-            <p className="text-lg text-gray-700">
-                This is where you can chat with your friends.
+            <p className="text-center lg:text-lg text-md text-gray-700 ">
+                This is where you can chat with your <i className="text-purple-600">friends</i>.
             </p>
+            <div className="lg:mt-10 mt-7 flex flex-col justify-center items-center">
+                <InputBox inputTitle="Room-Name :" type="text" placeholder="Math_PnC" size="lg" value={roomName} onChange={(e) => setroomName(e.target.value)} />
+                <Button name="Create Room" variant="primary" size="lg" onClick={create_room} />
+            </div>
         </div>
     );
 }
