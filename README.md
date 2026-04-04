@@ -1,4 +1,4 @@
-# Excalidraw Multi-User Chat
+# Excal.com Multi-User Chat
 
 ## Overview
 This project is a collaborative drawing application inspired by Excalidraw, enhanced with real-time multi-user chat functionality. Users can draw together on a shared canvas while communicating via an integrated chat system.

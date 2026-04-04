@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { initDraw } from "../draw";
 
-export default function Canvas({roomId,socket} : {roomId : string;socket:WebSocket}){
+export default function Canvas({roomId,socket,token} : {roomId : string; socket:WebSocket; token : string}){
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -10,9 +10,9 @@ export default function Canvas({roomId,socket} : {roomId : string;socket:WebSock
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width;
         canvas.height = rect.height;
-        initDraw(canvas,roomId,socket);
+        initDraw(canvas,roomId,socket,token);
       } 
-    },[roomId,socket]); 
+    },[roomId,socket,token]); 
 
    return (
     <div>

@@ -4,6 +4,7 @@ import  axios  from "axios";
 import { useRouter } from "next/navigation";
 import { InputBox } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
+import Link from "next/link";
 
 export default function Signin(){
     const [username, setUsername] = useState("");
@@ -30,13 +31,16 @@ export default function Signin(){
 
     }
      return(
-            <div className="w-screen h-screen grid place-content-center bg-[#ece9e2]">
-                <div className="border rounded-xl py-10 px-12">
+            <div className="w-screen h-screen grid place-content-center bg-bg">
+                <div className="border rounded-xl py-10 px-12 bg-card shadow-lg">
                     <span className="lg:text-5xl md:text-2xl text-xl font-serif">Sign In</span>
                     <div className="mt-6">
                         <InputBox size="lg" inputTitle="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
                         <InputBox type="password" size="lg" inputTitle="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
+                     <span className="text-md mt-4 block">
+                        Does not have an account ? <Link href="/signup" className="text-purple-500">Sign Up</Link>
+                    </span>
                     <div className="grid place-content-center mt-5">
                         <Button name="SignIn" variant="secondary" size="md" onClick={signin_req} />
                     </div>

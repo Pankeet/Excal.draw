@@ -4,10 +4,10 @@ import Canvas from "./Canvas";
 
 export default function RoomCanvas({roomId} : {roomId : string}){
     const [socket, setsocket] = useState<WebSocket | null>(null);
-    //const token = localStorage.getItem("token");
-
+    const token = localStorage.getItem("token");
+    
     useEffect(() => {
-      const ws = new WebSocket(`ws://localhost:8080?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkOTVmYmRmZi00NWZkLTRlYjAtOTBmNS02YzdkNzIxYjhiNTYiLCJlbWFpbCI6InBhbmtlZXQxNkBnbWFpbC5jb20iLCJpYXQiOjE3NzUyMTkyMTgsImV4cCI6MTc3NTI0MDgxOH0.1z075_GxvTEOXWr-jyWdh87FHotyol4DKZQCEtDVEPc`);
+      const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
       ws.onopen = () => {
         setsocket(ws);
         ws.send(JSON.stringify({
@@ -15,17 +15,24 @@ export default function RoomCanvas({roomId} : {roomId : string}){
           roomId : roomId
         }))
       }
-    },[roomId])
+    },[roomId,token])
 
   if(!socket){
     return (
-      <div>
+      <div className="flex justify-center items-center">
         Connecting to server....
       </div>
     )
   }
-
+  
+  if(!token) {
+    return (
+      <div className="flex justify-center items-center">  
+        Please login first to access the chat room.        
+      </div>
+    )
+  }
   return (
-    <Canvas roomId={roomId} socket={socket} />
+    <Canvas roomId={roomId} socket={socket} token={token} />
   )
 }

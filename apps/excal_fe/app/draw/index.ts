@@ -35,11 +35,10 @@ function preCanvas(exsistingshapes: Shape[], ctx : CanvasRenderingContext2D, can
     })
 }
 
-async function getexsistingShapes(roomId : string ){
-    const token : string | null = localStorage.getItem("token");
+async function getexsistingShapes(roomId : string , token : string ){
     const res = await axios.get(`http://localhost:8000/api/v1/chats/${roomId}`,{
         headers: {
-            authorization: token
+            Authorization: token
         }
     });
     const messages = res.data?.messages;
@@ -51,12 +50,13 @@ async function getexsistingShapes(roomId : string ){
     return shapes;
 }
 
-export async function initDraw(
+export function initDraw(
   canvas: HTMLCanvasElement,
   roomId: string,
-  socket: WebSocket
+  socket: WebSocket,
+  token : string
 ) {
-  const exsistingshapes: Shape[] = await getexsistingShapes(roomId);
+  const exsistingshapes: Shape[] = [];
   const ctx = canvas.getContext("2d");
   if (!ctx) return () => {};
 

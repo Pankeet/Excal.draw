@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-secret/dist/index.js";
+import jwt from "jsonwebtoken";
 
 interface Decoder {
     userId: string;
