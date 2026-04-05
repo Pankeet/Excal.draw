@@ -10,8 +10,8 @@ interface ButtonProps {
 
 const Styles_size = {
     "sm" : "px-2 py-1 text-sm rounded-lg",
-    "md" : "px-3 py-2 text-md rounded-xl",
-    "lg" : "px-4 py-3 text-lg rounded-xl",
+    "md" : "px-4 py-2 text-md rounded-xl",
+    "lg" : "px-5 py-2 text-lg rounded-xl",
 }
 
 const Styles_variant = {

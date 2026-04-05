@@ -32,17 +32,17 @@ export default function Signin(){
     }
      return(
             <div className="w-screen h-screen grid place-content-center bg-bg">
-                <div className="border rounded-xl py-10 px-12 bg-card shadow-lg">
+                <div className="border rounded-xl p-10 bg-card shadow-lg">
                     <span className="lg:text-5xl md:text-2xl text-xl font-serif">Sign In</span>
                     <div className="mt-6">
-                        <InputBox size="lg" inputTitle="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
-                        <InputBox type="password" size="lg" inputTitle="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <InputBox size="md" inputTitle="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                        <InputBox type="password" size="md" inputTitle="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
-                     <span className="text-md mt-4 block">
+                     <span className="text-md mt-4 block cursor-help">
                         Does not have an account ? <Link href="/signup" className="text-purple-500">Sign Up</Link>
                     </span>
                     <div className="grid place-content-center mt-5">
-                        <Button name="SignIn" variant="secondary" size="md" onClick={signin_req} />
+                        <Button name="SignIn" variant="primary" size="lg" onClick={signin_req} />
                     </div>
                 </div>
             </div>

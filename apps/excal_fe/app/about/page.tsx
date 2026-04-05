@@ -67,8 +67,8 @@ export default function AboutPage() {
                     </p>
                 </div>
                 <div className="relative flex justify-center items-center min-h-80">
-                    <div className="absolute w-56 h-56 rounded-full bg-[rgba(37,99,235,0.12)] animate-pulse" />
-                    <div className="relative p-8 w-full max-w-80 rounded-3xl z-auto bg-[radial-gradient(circle_at_top_left,#ffffff,#eef5ff)] shadow-[0_28px_80px_rgba(15,23,42,0.12)]">
+                    <div className="absolute w-72 h-72 rounded-full bg-blue-500/30 blur-3xl animate-pulse" />
+                    <div className="relative p-8 w-full max-w-80 rounded-3xl z-10 bg-white/80 backdrop-blur-xl border border-white/40 shadow-[0_30px_80px_rgba(37,99,235,0.25)]">
                         <span className='inline-flex px-3.5 py-2 bg-indigo-50 text-indigo-800 rounded-[999px] text-sm mb-4 text-left'>Live</span>
                         <strong className='block text-2xl mt-3 text-slate-900 text-center'>Multi-user Canvas</strong>
                     </div>

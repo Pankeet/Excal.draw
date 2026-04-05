@@ -42,3 +42,6 @@ packages/**/*.js
 
 #backend-secret file
 packages/backend-secret
+
+Building component
+apps/excal_fe/app/Home.tsx

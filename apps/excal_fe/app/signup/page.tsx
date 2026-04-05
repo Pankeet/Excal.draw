@@ -29,8 +29,8 @@ export default function SignUp(){
     }
     
     return(
-        <div className="w-screen h-screen grid place-content-center bg-bg">
-            <div className="border rounded-xl py-10 px-12 bg-card shadow-lg">
+        <div className="w-screen h-screen grid place-content-center bg-linear-to-t from-card to-bg">
+            <div className="border rounded-xl py-8 px-9 bg-card shadow-lg">
                 <span className="lg:text-4xl md:text-2xl text-xl font-serif">Sign Up</span>
                 <div className="mt-6" >
                     <InputBox inputTitle="Username :" type="text" placeholder="John Doe" size="md" value={username} onChange={(e) => setusername(e.target.value)} />
@@ -38,10 +38,10 @@ export default function SignUp(){
                     <InputBox inputTitle="Password :" type="password" placeholder="#johnDoe123" size="md" value={password} onChange={(e) => setpassword(e.target.value)}/>
                 </div>
                 <span className="text-md mt-4 block">
-                    Already has account ? <Link href="/signin" className="text-purple-500">Login</Link>
+                    Already have account ? <Link href="/signin" className="text-purple-500">Login</Link>
                 </span>
                 <div className="grid place-content-center mt-5">
-                    <Button name="SignUp" variant="primary" size="md" onClick={signup_req} />
+                    <Button name="SignUp" variant="primary" size="lg" onClick={signup_req} />
                 </div>
             </div>
         </div>
