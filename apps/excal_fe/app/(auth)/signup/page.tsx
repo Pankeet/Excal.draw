@@ -37,7 +37,7 @@ export default function SignUp(){
                     <InputBox  inputTitle="Email :" type="email" placeholder="johndoe@zohomail.com" size="md" value={email} onChange={(e) => setemail(e.target.value)}/>
                     <InputBox inputTitle="Password :" type="password" placeholder="#johnDoe123" size="md" value={password} onChange={(e) => setpassword(e.target.value)}/>
                 </div>
-                <span className="text-md mt-4 block">
+                <span className="text-md mt-4 block cursor-help">
                     Already have account ? <Link href="/signin" className="text-purple-500">Login</Link>
                 </span>
                 <div className="grid place-content-center mt-5">

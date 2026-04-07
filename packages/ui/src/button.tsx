@@ -1,5 +1,5 @@
 type Variants = "primary" | "secondary";  
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "xlg";
 
 interface ButtonProps {
     name : string;
@@ -12,6 +12,7 @@ const Styles_size = {
     "sm" : "px-2 py-1 text-sm rounded-lg",
     "md" : "px-4 py-2 text-md rounded-xl",
     "lg" : "px-5 py-2 text-lg rounded-xl",
+    "xlg" : "px-10 py-4 text-xl rounded-2xl"
 }
 
 const Styles_variant = {
