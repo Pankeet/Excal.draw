@@ -4,10 +4,13 @@ import Canvas from "./Canvas";
 
 export default function RoomCanvas({roomId} : {roomId : string}){
     const [socket, setsocket] = useState<WebSocket | null>(null);
-    const token = localStorage.getItem("token");
+    const [token, setToken] = useState<string | null>(null);
     
     useEffect(() => {
-      const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+      if (!storedToken) return;
+      const ws = new WebSocket(`ws://localhost:8080?token=${storedToken}`);
       ws.onopen = () => {
         setsocket(ws);
         ws.send(JSON.stringify({
@@ -15,7 +18,7 @@ export default function RoomCanvas({roomId} : {roomId : string}){
           roomId : roomId
         }))
       }
-    },[roomId,token])
+    },[roomId])
 
   if(!socket){
     return (

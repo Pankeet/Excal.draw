@@ -22,6 +22,7 @@ interface inputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const InputBox = ({
@@ -30,7 +31,8 @@ export const InputBox = ({
   inputTitle,
   placeholder,
   value,
-  onChange
+  onChange,
+  onKeyDown
 }: inputProps) => {
 
  const [showPassword, setShow] = useState(false);
@@ -48,6 +50,7 @@ export const InputBox = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          onKeyDown={onKeyDown}
           className={`${sizeStyles[size]} ${isPassword ? "pr-9" : ""} border rounded-lg`}
         />
 

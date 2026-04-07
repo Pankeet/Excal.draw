@@ -12,6 +12,11 @@ export default function Signin(){
     const router = useRouter();
 
     async function signin_req(){
+        if(username.trim() === "" || password.trim() === ""){
+            alert("Please Enter the details to login !");
+            return;
+        }
+
         const data = {
             username, password
         }
@@ -36,7 +41,13 @@ export default function Signin(){
                     <span className="lg:text-5xl md:text-2xl text-xl font-serif">Sign In</span>
                     <div className="mt-6">
                         <InputBox size="md" inputTitle="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
-                        <InputBox type="password" size="md" inputTitle="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <InputBox type="password" size="md" inputTitle="Password" value={password} onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                            if(e.key === "Enter" && !e.shiftKey){
+                                e.preventDefault();
+                                signin_req();
+                            }
+                        }}/>
                     </div>
                      <span className="text-md mt-4 block cursor-help">
                         Does not have an account ? <Link href="/signup" className="text-purple-500">Sign Up</Link>

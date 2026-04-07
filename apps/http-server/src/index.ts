@@ -86,9 +86,9 @@ app.post("/api/v1/signin", async (req , res) => {
 });
 
 // Room Creation Endpoint Completed (✔️)
-app.post("/api/v1/create-room", async (req , res) => {
+app.post("/api/v1/create-room", validate_user, async (req , res) => {
     const userId = req.userId;
-    const roomName  = req.body.name;
+    const roomName  = req.body.slug;
     try{
         const create_room = await prisma.room.create({
             data:{
@@ -100,6 +100,7 @@ app.post("/api/v1/create-room", async (req , res) => {
             roomId : create_room.id
         })
     }catch(err){
+        console.error(err);
         return res.status(500).json({
             message : "Cannot create room ! Please Try again later"
         })

@@ -16,9 +16,6 @@ export default function Canvas({roomId,socket,token} : {roomId : string; socket:
 
    return (
     <div>
-      <h1 className="text-3xl font-bold underline">
-        Chat Room !
-      </h1>
       <canvas ref={canvasRef} width={2000} height={1000}/>
     </div>
   );

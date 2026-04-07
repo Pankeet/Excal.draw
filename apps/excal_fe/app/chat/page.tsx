@@ -1,5 +1,6 @@
 "use client"
 import gsap from "gsap";
+import axios from "axios";
 import { Button } from "@repo/ui/button";
 import { InputBox } from "@repo/ui/input";
 import { useLayoutEffect, useRef , useState } from "react";
@@ -20,8 +21,32 @@ export default function ChatPage() {
         return () => ctx.revert(); 
     }, []);
 
-    function create_room(){
-        router.push(`/chat/${roomName}`);
+    async function create_room(){
+        if(roomName.trim() === ""){
+            alert("Room Name cannot be Empty !");
+            return;
+        }
+
+        const token = localStorage.getItem("token");
+        const data = {
+            slug : roomName
+        }
+        try{
+            const res = await axios.post("http://localhost:8000/api/v1/create-room", data, {
+                headers : {
+                    Authorization : token
+                }
+            });
+            const roomId = res.data.roomId;
+            router.push(`/chat/${roomId}`);
+        }catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                alert(e.response?.data?.message || "Something went wrong");
+            } else {
+                alert("Server not reachable!");
+            }
+            console.error(e);
+        }
     }
 
     return (
@@ -35,7 +60,13 @@ export default function ChatPage() {
                     This is where you can chat with your <i className="text-purple-600">friends</i>.
                 </p>
                 <div className="lg:mt-10 mt-7 flex flex-col justify-center items-center">
-                    <InputBox inputTitle="Room-Name :" type="text" placeholder="Math_PnC" size="lg" value={roomName} onChange={(e) => setroomName(e.target.value)} />
+                    <InputBox inputTitle="Room-Name :" type="text" placeholder="Math_PnC" size="lg" value={roomName} onChange={(e) => setroomName(e.target.value)} 
+                    onKeyDown={(e) => {
+                        if(e.key === "Enter" && !e.shiftKey){
+                            e.preventDefault();
+                            create_room();
+                        }
+                    }}/>
                     <Button name="Create Room" variant="primary" size="lg" onClick={create_room} />
                 </div>
             </div>
