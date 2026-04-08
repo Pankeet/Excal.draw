@@ -22,17 +22,24 @@ function getMousePos(canvas: HTMLCanvasElement, e: MouseEvent) {
 }
 
 function preCanvas(exsistingshapes: Shape[], ctx : CanvasRenderingContext2D, canvas : HTMLCanvasElement){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    exsistingshapes.map((shape) => {
-        if(shape.type === "rect"){
-            ctx.strokeStyle = "white";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-        }
-    })
+  exsistingshapes.forEach((shape) => {
+      if(shape.type === "rect"){
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
+      }
+
+      if(shape.type === "circle"){
+        ctx.beginPath();
+        ctx.arc(shape.x, shape.y, shape.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "royalblue";
+        ctx.fill();
+      }
+  })
 }
 
 async function getexsistingShapes(roomId : string , token : string ) : Promise<Shape []> {
@@ -57,13 +64,14 @@ export function initDraw(
   socket: WebSocket,
   token : string
 ) {
-  let exsistingshapes: Shape[] = [];
-  getexsistingShapes(roomId, token).then((shapes) => {
-  exsistingshapes = shapes;
-  preCanvas(exsistingshapes, ctx!, canvas);
-});
   const ctx = canvas.getContext("2d");
   if (!ctx) return () => {};
+
+  let exsistingshapes: Shape[] = [];
+  getexsistingShapes(roomId, token).then((shapes) => {
+    exsistingshapes = shapes;
+    preCanvas(exsistingshapes, ctx, canvas);
+  });
 
   const handleMessage = (event: MessageEvent) => {
     const message = JSON.parse(event.data);

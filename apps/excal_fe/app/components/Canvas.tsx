@@ -7,10 +7,8 @@ export default function Canvas({roomId,socket,token} : {roomId : string; socket:
     useEffect(() => {
       const canvas = canvasRef.current;
       if(canvas) {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        initDraw(canvas,roomId,socket,token);
+        const cleanup = initDraw(canvas,roomId,socket,token);
+        return cleanup;
       } 
     },[roomId,socket,token]); 
 
