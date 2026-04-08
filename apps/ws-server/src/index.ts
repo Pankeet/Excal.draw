@@ -132,14 +132,13 @@ if (existingUser) {
 // Chat in Room
     if (parseData.type === "chat") {
       const { roomId , message } = parseData;
-
-      // await prisma.chat.create({
-      //     data : {
-      //       message : message,
-      //       userId : userId,
-      //       roomId : Number(roomId)
-      //     }
-      // });
+      await prisma.chat.create({
+          data : {
+            message : message,
+            userId : userId,
+            roomId : Number(roomId)
+          }
+      });
 
       if (!user.rooms.has(roomId)) {
         sendError(ws, "Join room first");
@@ -174,7 +173,6 @@ if (existingUser) {
   ws.on("close", () => {
   const user = users.get(userId);
   if (!user) return;
-
   user.sockets.delete(ws);
 
   if (user.sockets.size === 0) {

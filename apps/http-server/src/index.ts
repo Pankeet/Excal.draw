@@ -107,6 +107,33 @@ app.post("/api/v1/create-room", validate_user, async (req , res) => {
     }
 });
 
+app.get('/api/v1/room/:slug', validate_user, async ( req , res) => {
+    const slug = req.params.slug as string;
+    try{
+        const room = await prisma.room.findUnique({
+            where : {
+                slug : slug
+            }
+        });
+
+        if (!room) {
+            return res.status(404).json({
+                message: "Room not found !"
+            });
+        }
+        else{
+            return res.status(200).json({
+                roomId : room.id
+            });
+        }
+    }catch(e){
+        console.error(e);
+        return res.status(500).json({
+            message : "Something Went Wrong !"
+        })
+    }
+})
+
 app.get('/api/v1/chats/:roomId',validate_user , async (req, res) => {
     const roomId = Number(req.params.roomId);
     try{
@@ -131,31 +158,5 @@ app.get('/api/v1/chats/:roomId',validate_user , async (req, res) => {
         })
 }
 });
-
-app.get('/api/v1/room/:slug', validate_user, async ( req , res) => {
-    const slug = req.params.slug as string;
-    try{
-        const room = await prisma.room.findUnique({
-            where : {
-                slug : slug
-            }
-        });
-        if (!room) {
-            return res.status(404).json({
-                message: "Room not found !"
-            });
-        }
-
-        return res.status(200).json({
-            roomId : room.id
-        });
-        
-    }catch(e){
-        console.error(e);
-        return res.status(500).json({
-            message : "Something Went Wrong !"
-        })
-    }
-})
 
 app.listen(8000);
