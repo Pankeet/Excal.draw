@@ -10,6 +10,7 @@ import Header from "../components/header";
 export default function ChatPage() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [ roomName , setroomName] = useState("");
+     const [ joinroomName , setjoinroom] = useState("");
     const router = useRouter();
 
     useLayoutEffect(() => {
@@ -49,6 +50,31 @@ export default function ChatPage() {
         }
     }
 
+    async function join_room(){
+        if(joinroomName.trim() === ""){
+            alert("Room Name cannot be Empty !");
+            return;
+        }
+
+        const token = localStorage.getItem("token");
+        try{
+            const res = await axios.get(`http://localhost:8000/api/v1/room/${joinroomName}`,{
+                headers : {
+                    Authorization : token
+                }
+            });
+            const roomId = res.data.roomId;
+            router.push(`/chat/${roomId}`);
+        }catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                alert(e.response?.data?.message || "Something went wrong");
+            } else {
+                alert("Server not reachable!");
+            }
+            console.error(e);
+        }
+    }
+
     return (
         <>   
             <Header />     
@@ -68,6 +94,16 @@ export default function ChatPage() {
                         }
                     }}/>
                     <Button name="Create Room" variant="primary" size="lg" onClick={create_room} />
+                </div>
+                <div className="lg:mt-10 mt-7 flex flex-col justify-center items-center">
+                    <InputBox inputTitle="Room-Name :" type="text" size="lg" value={joinroomName} onChange={(e) => setjoinroom(e.target.value)} 
+                    onKeyDown={(e) => {
+                        if(e.key === "Enter" && !e.shiftKey){
+                            e.preventDefault();
+                            join_room();
+                        }
+                    }}/>
+                    <Button name="Join Room" variant="primary" size="lg" onClick={join_room} />
                 </div>
             </div>
         </>
