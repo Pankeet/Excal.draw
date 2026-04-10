@@ -36,8 +36,7 @@ function preCanvas(exsistingshapes: Shape[], ctx : CanvasRenderingContext2D, can
       if(shape.type === "circle"){
         ctx.beginPath();
         ctx.arc(shape.x, shape.y, shape.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "royalblue";
-        ctx.fill();
+        ctx.stroke();
       }
   })
 }
@@ -62,7 +61,8 @@ export function initDraw(
   canvas: HTMLCanvasElement,
   roomId: string,
   socket: WebSocket,
-  token : string
+  token : string,
+  selectedTool : "rect" | "circle" | "pencil"
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return () => {};
@@ -98,17 +98,33 @@ export function initDraw(
   const handleMouseUp = (e: MouseEvent) => {
     clicked = false;
     const pos = getMousePos(canvas, e);
+    let shape : Shape;
     const width = pos.x - startX;
     const height = pos.y - startY;
+    if(selectedTool === "rect"){
+      shape = {
+        type: "rect",
+        x: startX,
+        y: startY,
+        width,
+        height,
+      };
+    }
+    else if(selectedTool === "circle"){
+     const centerX = startX + width / 2;
+     const centerY = startY + height / 2;
 
-    const shape = {
-      type: "rect" as const,
-      x: startX,
-      y: startY,
-      width,
-      height,
-    };
-
+      const radius = Math.sqrt(width * width + height * height) / 2;
+      shape = {
+        type : "circle",
+        x : centerX,
+        y : centerY,
+        radius : radius
+      }
+    }
+    else {
+      return;
+    }
     exsistingshapes.push(shape);
     preCanvas(exsistingshapes, ctx, canvas);
     socket.send(
@@ -118,6 +134,7 @@ export function initDraw(
         message: JSON.stringify(shape),
       })
     );
+    console.log(exsistingshapes);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -126,9 +143,21 @@ export function initDraw(
     const width = pos.x - startX;
     const height = pos.y - startY;
     preCanvas(exsistingshapes, ctx, canvas);
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(startX, startY, width, height);
+    if(selectedTool === "rect"){
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(startX, startY, width, height);
+    }
+    else if(selectedTool === "circle"){
+      const radiusX = startX + width / 2;
+      const radiusY = startY + height / 2;
+      const radius = Math.sqrt(width * width + height * height) / 2;
+      ctx.beginPath();
+      ctx.arc(radiusX,radiusY,radius,0,2 * Math.PI);
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
   };
 
   canvas.addEventListener("mousedown", handleMouseDown);

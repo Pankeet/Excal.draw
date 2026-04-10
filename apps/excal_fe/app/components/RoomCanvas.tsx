@@ -13,7 +13,6 @@ export default function RoomCanvas({roomId} : {roomId : string}){
       if(!token) return;
       const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
       ws.onopen = () => {
-        console.log("WS CREATED");
         setsocket(ws);
         ws.send(JSON.stringify({
           type : "join",

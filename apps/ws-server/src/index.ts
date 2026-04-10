@@ -132,13 +132,24 @@ if (existingUser) {
 // Chat in Room
     if (parseData.type === "chat") {
       const { roomId , message } = parseData;
-      await prisma.chat.create({
+      let errormsg = ""
+    
+      const msg = JSON.parse(message);
+      if(msg.width === 0 || msg.heigth === 0 || msg.radius === 0) return;
+
+      try{
+        await prisma.chat.create({
           data : {
             message : message,
             userId : userId,
             roomId : Number(roomId)
           }
       });
+      }catch(e){
+        console.error(e);
+        errormsg = "Error ! Cannot send message "
+      }
+      
 
       if (!user.rooms.has(roomId)) {
         sendError(ws, "Join room first");
