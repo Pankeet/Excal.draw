@@ -20,7 +20,7 @@ const Styles_variant = {
     "secondary" : "bg-purple-200 text-purple-800"
 }
 
-export function Button(Props : ButtonProps){
+export function Button(Props : Readonly<ButtonProps>){
     return (
         <div>
             <button onClick={Props.onClick} className={`hover:cursor-pointer font-serif  ${Styles_size[Props.size]} ${Styles_variant[Props.variant]}`}>{Props.name}</button>

@@ -27,6 +27,15 @@ function sendError(ws: WebSocket, message: string) {
   ws.send(JSON.stringify({ type: "error", message }));
 }
 
+function checkUser(token: string): string | null {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
+    return decoded?.userId ?? null;
+  } catch (err) {
+    console.error("JWT error:", err);
+    return null;
+  }
+} 
 
 function handleJoin(ws: WebSocket, userId : string, user : UserData, roomId: string){
   let room = rooms.get(roomId);
@@ -114,17 +123,6 @@ function broadcast(roomUsers: Set<string>, payload: any) {
     for (const socket of targetUser.sockets) {
       socket.send(JSON.stringify(payload));
     }
-  }
-}
-
-
-function checkUser(token: string): string | null {
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
-    return decoded?.userId ?? null;
-  } catch (err) {
-    console.error("JWT error:", err);
-    return null;
   }
 }
 

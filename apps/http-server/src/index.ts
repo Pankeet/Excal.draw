@@ -115,14 +115,14 @@ app.get('/api/v1/room/:slug', validate_user, async ( req , res) => {
             }
         });
 
-        if (!room) {
-            return res.status(404).json({
-                message: "Room not found !"
+        if (room) {
+            return res.status(200).json({
+                roomId : room.id
             });
         }
         else{
-            return res.status(200).json({
-                roomId : room.id
+            return res.status(404).json({
+                message: "Room not found !"
             });
         }
     }catch(e){

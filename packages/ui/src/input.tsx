@@ -15,7 +15,7 @@ const sizeStyles_title: Record<inputSize, string> = {
   lg: "text-2xl"
 };
 
-interface inputProps {
+interface InputProps {
   type: string;
   size: inputSize;
   inputTitle?: string;
@@ -33,10 +33,15 @@ export const InputBox = ({
   value,
   onChange,
   onKeyDown
-}: inputProps) => {
+}: Readonly<InputProps>) => {
 
- const [showPassword, setShow] = useState(false);
+ const [showPassword, setshowPassword] = useState(false);
  const isPassword = type === "password";
+ let inputType = type;
+
+ if (isPassword) {
+  inputType = showPassword ? "text" : "password";
+ }
 
   return (
     <div className="grid gap-0.5 mb-4">
@@ -46,7 +51,7 @@ export const InputBox = ({
 
       <div className="relative">
         <input
-          type={isPassword ? (showPassword ? "text" : "password") : type}
+          type={inputType}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -55,9 +60,13 @@ export const InputBox = ({
         />
 
         {isPassword && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" onClick={() => setShow(prev => !prev)} >
+          <button 
+            type="button" 
+            onClick={() => setshowPassword(prev => !prev)} 
+            className="absolute right-4 top-1/2 -translate-y-1/2"
+            aria-label={showPassword ? "Hide password" : "Show password"}>
             {showPassword ? <FaEye /> : <FaEyeSlash />}
-          </div>
+          </button>
         )}
       </div>
     </div>
