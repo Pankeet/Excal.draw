@@ -9,8 +9,8 @@ import Header from "../components/header";
 
 export default function ChatPage() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [ roomName , setroomName] = useState("");
-     const [ joinroomName , setjoinroom] = useState("");
+    const [roomName , setroomName] = useState("");
+     const [joinRoomName , setjoinRoomName] = useState("");
     const router = useRouter();
 
     useLayoutEffect(() => {
@@ -51,14 +51,14 @@ export default function ChatPage() {
     }
 
     async function join_room(){
-        if(joinroomName.trim() === ""){
+        if(joinRoomName.trim() === ""){
             alert("Room Name cannot be Empty !");
             return;
         }
 
         const token = localStorage.getItem("token");
         try{
-            const res = await axios.get(`http://localhost:8000/api/v1/room/${joinroomName}`,{
+            const res = await axios.get(`http://localhost:8000/api/v1/room/${joinRoomName}`,{
                 headers : {
                     Authorization : token
                 }
@@ -96,7 +96,7 @@ export default function ChatPage() {
                     <Button name="Create Room" variant="primary" size="lg" onClick={create_room} />
                 </div>
                 <div className="lg:mt-10 mt-7 flex flex-col justify-center items-center">
-                    <InputBox inputTitle="Room-Name :" type="text" size="lg" value={joinroomName} onChange={(e) => setjoinroom(e.target.value)} 
+                    <InputBox inputTitle="Room-Name :" type="text" size="lg" value={joinRoomName} onChange={(e) => setjoinRoomName(e.target.value)} 
                     onKeyDown={(e) => {
                         if(e.key === "Enter" && !e.shiftKey){
                             e.preventDefault();

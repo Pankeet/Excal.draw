@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import Canvas from "./Canvas";
 
-export default function RoomCanvas({roomId} : {roomId : string}){
+export default function RoomCanvas({roomId} : Readonly<{roomId : string}>){
     const [socket, setsocket] = useState<WebSocket | null>(null);
     const [token] = useState<string | null>(() => {
-      if(typeof window === "undefined") return null;
+      if(globalThis.window === undefined) return null;
       return localStorage.getItem("token");
     });
     

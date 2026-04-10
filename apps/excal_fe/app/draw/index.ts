@@ -50,11 +50,17 @@ async function getexsistingShapes(roomId : string , token : string ) : Promise<S
     
     const messages = res.data?.messages || [];
 
-    const shapes = messages.map((x : {message : string}) => {
-        const messageData = JSON.parse(x.message);
-        return messageData;
-    });
-    return shapes;
+    try{
+      const shapes = messages.map((x : {message : string}) => {
+          const messageData = JSON.parse(x.message);
+          return messageData;
+      });
+      return shapes;
+  }catch(e){
+    console.error(e);
+    alert("Sorry ! We are unable to fetch the older chats at the moment !");
+    return [];
+  }
 }
 
 export function initDraw(
@@ -114,7 +120,7 @@ export function initDraw(
      const centerX = startX + width / 2;
      const centerY = startY + height / 2;
 
-      const radius = Math.sqrt(width * width + height * height) / 2;
+      const radius = Math.hypot(width, height) / 2;
       shape = {
         type : "circle",
         x : centerX,
@@ -150,7 +156,7 @@ export function initDraw(
     else if(selectedTool === "circle"){
       const radiusX = startX + width / 2;
       const radiusY = startY + height / 2;
-      const radius = Math.sqrt(width * width + height * height) / 2;
+      const radius = Math.hypot(width, height) / 2;
       ctx.beginPath();
       ctx.arc(radiusX,radiusY,radius,0,2 * Math.PI);
       ctx.strokeStyle = "white";

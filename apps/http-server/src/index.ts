@@ -2,11 +2,9 @@ import express from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { SALT_ROUNDS  } from "@repo/backend-secret/dist/index.js";
-import { JWT_SECRET } from "@repo/backend-secret/dist/index.js"; 
+import { JWT_SECRET, SALT_ROUNDS  } from "@repo/backend-secret/dist/index.js";
 import { prisma } from "@repo/db-local/config/prisma-config.js";
-import { User } from "./zod/types.js";
-import { SiginSchema } from "./zod/types.js";
+import { User, SiginSchema } from "./zod/types.js";
 import validate_user from "./middlewares/validate-user.js";
 
 const app = express();
@@ -17,18 +15,23 @@ app.use(cors());
 // SignUp Endpoint Completed (✔️)
 app.post("/api/v1/signup", async (req , res) => {
     const userDetails = User.safeParse(req.body);
-    if(!userDetails.success) {
+    if(userDetails.success === false) {
         return res.status(422).json({
             message : "Invalid Semantics"
         });
     }   
     else{
-        const { username, email, password } = req.body;
+        const { username, email, password } = userDetails.data;
         const findExsistence = await prisma.user.findUnique({where:{email:email}})
-        if(!findExsistence){
+        if(findExsistence){
+            return res.status(409).json({
+                message : "User already Exsists !"
+            })
+        }   
+        else{
             try{
                 const hash_password = await bcrypt.hash(password , SALT_ROUNDS );
-                const user = await prisma.user.create({
+                await prisma.user.create({
                     data:{
                         username : username,
                         email : email,
@@ -38,16 +41,12 @@ app.post("/api/v1/signup", async (req , res) => {
                 return res.status(201).json({
                     message : "User Created Successfully !"
                 });
-        }   catch(err){
+            }catch(err){
+                console.error("SignUp Error :- ", err);
                 return res.status(500).json({
                     message : "User cannot be created ! Please try again later "
                 });
             }
-        }   
-        else{
-            return res.status(409).json({
-                message : "User already Exsists !"
-            })
         }
     }
 });
@@ -56,7 +55,7 @@ app.post("/api/v1/signup", async (req , res) => {
 // SigIn Endpoint Completed (✔️)
 app.post("/api/v1/signin", async (req , res) => {
     const signDetails = SiginSchema.safeParse(req.body);
-    if(!signDetails.success) {
+    if(signDetails.success === false) {
         return res.status(422).json({
             message : "Invalid Semantics"
         });
