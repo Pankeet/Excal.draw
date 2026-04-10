@@ -134,7 +134,6 @@ export function initDraw(
         message: JSON.stringify(shape),
       })
     );
-    console.log(exsistingshapes);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
