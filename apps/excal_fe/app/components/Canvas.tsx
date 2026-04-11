@@ -1,9 +1,9 @@
 import { useEffect, useRef , useState } from "react";
 import { initDraw } from "../draw";
 import IconButton from "./IconButton";
-import { Circle, Pencil , RectangleHorizontal } from "lucide-react";
+import { Circle, Pencil , RectangleHorizontal, Type } from "lucide-react";
 
-type Shape = "circle" | "rect" | "pencil";
+type Shape = "circle" | "rect" | "text" | "pencil" ;
 
 export default function Canvas({roomId,socket,token} : Readonly<{roomId : string; socket:WebSocket; token : string}>){
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,8 +58,13 @@ function TopBar({
           icon={<RectangleHorizontal />}
           activated={activated === "rect"} />
 
+          <IconButton
+          onClick={() => {
+            setactivated("text");
+          }}
+          icon={<div><Type /></div>}
+          activated={activated === "text"} />
       </div>
-        
     </div>
   )
 }

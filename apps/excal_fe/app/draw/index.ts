@@ -11,7 +11,16 @@ type Shape = {
     x: number;
     y: number;
     radius: number;
-} ;
+} | {
+  type : "text",
+  x: number,
+  y: number,
+  text: string
+} | {
+  type : "pencil",
+  x : number,
+  y : number
+};
 
 function getMousePos(canvas: HTMLCanvasElement, e: MouseEvent) {
     const rect = canvas.getBoundingClientRect();
@@ -19,6 +28,33 @@ function getMousePos(canvas: HTMLCanvasElement, e: MouseEvent) {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top
     };
+}
+
+function SendMsg(socket : WebSocket, roomId : string , shape : Shape){
+  socket.send(
+      JSON.stringify({
+        type: "chat",
+        roomId,
+        message: JSON.stringify(shape),
+      })
+    );
+}
+
+function getInputElement(pos : {x:number, y:number}) : HTMLInputElement{
+  const input = document.createElement("input");
+      input.type = "text";
+      input.style.position = "absolute";
+      input.style.left = `${pos.x}px`;
+      input.style.top = `${pos.y}px`;
+      input.style.font = "16px Arial";
+      input.style.border = "none";
+      input.style.borderBottom = "2px solid white";
+      input.style.padding = "4px 6px";
+      input.style.outline = "none";
+      input.style.background = "transparent";
+      input.style.color = "white";
+
+      return input;
 }
 
 function preCanvas(exsistingshapes: Shape[], ctx : CanvasRenderingContext2D, canvas : HTMLCanvasElement){
@@ -37,6 +73,12 @@ function preCanvas(exsistingshapes: Shape[], ctx : CanvasRenderingContext2D, can
         ctx.beginPath();
         ctx.arc(shape.x, shape.y, shape.radius, 0, Math.PI * 2);
         ctx.stroke();
+      }
+
+      if(shape.type === "text"){
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText(shape.text, shape.x, shape.y);
       }
   })
 }
@@ -68,12 +110,13 @@ export function initDraw(
   roomId: string,
   socket: WebSocket,
   token : string,
-  selectedTool : "rect" | "circle" | "pencil"
+  selectedTool : Shape["type"]
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return () => {};
 
   let exsistingshapes: Shape[] = [];
+  let shape : Shape;
   getexsistingShapes(roomId, token).then((shapes) => {
     exsistingshapes = shapes;
     preCanvas(exsistingshapes, ctx, canvas);
@@ -99,12 +142,53 @@ export function initDraw(
     const pos = getMousePos(canvas, e);
     startX = pos.x;
     startY = pos.y;
+    if(selectedTool === "text"){
+      e.preventDefault();   
+      e.stopPropagation();
+      const input = getInputElement(pos);
+      document.body.appendChild(input);
+      input.focus();
+      let removed = false;
+
+      const removeInput = () => {
+        if (removed) return;
+        submit();
+        input.remove();
+        removed = true;
+      };
+
+      const submit = () => {
+        if (removed) return;
+        const text = input.value.trim();
+
+        if (text) {
+          const shape: Shape = {
+            type: "text",
+            x: pos.x,
+            y: pos.y,
+            text,
+          };
+
+          exsistingshapes.push(shape);
+          preCanvas(exsistingshapes, ctx, canvas);
+          SendMsg(socket, roomId, shape);
+        }
+        input.remove();
+        removed = true;
+      };
+
+      input.addEventListener("keydown",(e) => {
+        if(e.key === "Enter"){
+          submit();
+        };
+      })
+      input.addEventListener("blur", removeInput);
+    }
   };
 
   const handleMouseUp = (e: MouseEvent) => {
     clicked = false;
     const pos = getMousePos(canvas, e);
-    let shape : Shape;
     const width = pos.x - startX;
     const height = pos.y - startY;
     if(selectedTool === "rect"){
@@ -133,13 +217,7 @@ export function initDraw(
     }
     exsistingshapes.push(shape);
     preCanvas(exsistingshapes, ctx, canvas);
-    socket.send(
-      JSON.stringify({
-        type: "chat",
-        roomId,
-        message: JSON.stringify(shape),
-      })
-    );
+    SendMsg(socket,roomId,shape);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -162,6 +240,12 @@ export function initDraw(
       ctx.strokeStyle = "white";
       ctx.lineWidth = 2;
       ctx.stroke();
+    }
+    else if(selectedTool === "text"){
+      canvas.style.cursor = "text";
+    }
+    else {
+       canvas.style.cursor = "crosshair"
     }
   };
 
