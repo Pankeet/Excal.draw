@@ -4,4 +4,6 @@
     "rootDir": "src",
     "outDir": "dist",
   },
+  "include": ["src"],
+  "exclude": ["vitest.config.ts"]
 }
