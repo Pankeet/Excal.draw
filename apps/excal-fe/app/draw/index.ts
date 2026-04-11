@@ -173,11 +173,6 @@ export function initDraw(
         removed = true;
       };
 
-      input.addEventListener("keydown",(e) => {
-        if(e.key === "Enter"){
-          submit();
-        };
-      })
       input.addEventListener("blur", removeInput);
     }
   };
