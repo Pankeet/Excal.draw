@@ -37,7 +37,7 @@ export default function SignUp(){
             <div className="border rounded-xl py-8 px-9 bg-card shadow-lg">
                 <span className="lg:text-4xl md:text-2xl text-xl font-serif">Sign Up</span>
                 <div className="mt-6" >
-                    <InputBox inputTitle="Username :" type="text" placeholder="John Doe" size="md" value={username} onChange={(e) => setusername(e.target.value)} />
+                    <InputBox inputTitle="Username :" type="text" placeholder="John_Doe" size="md" value={username} onChange={(e) => setusername(e.target.value)} />
                     <InputBox  inputTitle="Email :" type="email" placeholder="johndoe@zohomail.com" size="md" value={email} onChange={(e) => setemail(e.target.value)}/>
                     <InputBox inputTitle="Password :" type="password" placeholder="#johnDoe123" size="md" value={password} onChange={(e) => setpassword(e.target.value)} 
                         onKeyDown={(e) => {

@@ -1,4 +1,4 @@
-import express from "express";
+import express , {type Express} from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -7,7 +7,7 @@ import { prisma } from "@repo/db-local/config/prisma-config.js";
 import { User, SiginSchema } from "./zod/types.js";
 import validate_user from "./middlewares/validate-user.js";
 
-const app = express();
+const app : Express = express();
 app.use(express.json());
 app.use(cors());
 
@@ -158,4 +158,10 @@ app.get('/api/v1/chats/:roomId',validate_user , async (req, res) => {
 }
 });
 
-app.listen(8000);
+export default app;
+
+if (process.env.NODE_ENV !== "test") {
+  app.listen(8000, () => {
+    console.log("Server running on port 8000");
+  });
+}

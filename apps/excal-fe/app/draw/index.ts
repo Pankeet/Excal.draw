@@ -153,14 +153,10 @@ export function initDraw(
       const removeInput = () => {
         if (removed) return;
         submit();
-        input.remove();
-        removed = true;
       };
 
       const submit = () => {
-        if (removed) return;
         const text = input.value.trim();
-
         if (text) {
           const shape: Shape = {
             type: "text",
