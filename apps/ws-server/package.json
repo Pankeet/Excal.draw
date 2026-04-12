@@ -21,7 +21,9 @@
     "@repo/backend-secret": "workspace:*",
     "@repo/db-local": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/ws": "^8.18.1"
+    "@types/dotenv": "^8.2.3",
+    "@types/ws": "^8.18.1",
+    "dotenv": "^17.3.1"
   },
   "keywords": [],
   "author": "",

@@ -103,7 +103,7 @@ export default function ChatPage() {
                             join_room();
                         }
                     }}/>
-                    <Button name="Join Room" variant="primary" size="lg" onClick={join_room} />
+                    <Button name="Join Room" variant="secondary" size="lg" onClick={join_room} />
                 </div>
             </div>
         </>

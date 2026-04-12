@@ -1,7 +1,9 @@
 import { WebSocketServer, type WebSocket } from "ws";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "@repo/backend-secret/dist/index.js";
 import { prisma } from "@repo/db-local/config/prisma-config.js";
+import dotenv from "dotenv";
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 interface DecodedToken {
   userId: string;
@@ -29,7 +31,7 @@ function sendError(ws: WebSocket, message: string) {
 
 function checkUser(token: string): string | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
+    const decoded = jwt.verify(token, JWT_SECRET || "no-secret") as DecodedToken;
     return decoded?.userId ?? null;
   } catch (err) {
     console.error("JWT error:", err);
