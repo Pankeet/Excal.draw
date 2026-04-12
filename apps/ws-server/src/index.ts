@@ -1,8 +1,7 @@
 import { WebSocketServer, type WebSocket } from "ws";
 import jwt from "jsonwebtoken";
+import "dotenv/config"
 import { prisma } from "@repo/db-local/config/prisma-config.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 if(!process.env.JWT_SECRET){
   throw new Error("JWT_SECRET is not defined !");
@@ -162,8 +161,9 @@ if (existingUser) {
 
   ws.on("message", async (data) => {
     handleMessage(ws,userId,data);
+  });
 
-  ws.on("close", () => {
+   ws.on("close", () => {
     const user = users.get(userId);
     if (!user) return;
     user.sockets.delete(ws);
@@ -175,7 +175,6 @@ if (existingUser) {
       users.delete(userId);
     }
   });
-  });
 });
 
 async function handleMessage(ws: WebSocket, userId : string , data : any){
@@ -185,8 +184,10 @@ async function handleMessage(ws: WebSocket, userId : string , data : any){
   let parseData: ClientMessage;
 
   try {
-    parseData = JSON.parse(data.toString());
+    const str = typeof data === "string" ? data : data.toString();
+    parseData = JSON.parse(str);
   }catch {
+    console.log("Bad message received:", data);
     sendError(ws, "Invalid JSON");
     return;
   }
