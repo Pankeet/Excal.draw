@@ -18,7 +18,6 @@
     "ws": "^8.19.0"
   },
   "devDependencies": {
-    "@repo/backend-secret": "workspace:*",
     "@repo/db-local": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/dotenv": "^8.2.3",

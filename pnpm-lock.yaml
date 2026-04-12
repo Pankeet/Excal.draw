@@ -103,9 +103,6 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@repo/backend-secret':
-        specifier: workspace:*
-        version: link:../../packages/backend-secret
       '@repo/db-local':
         specifier: workspace:*
         version: link:../../packages/db-local
@@ -176,9 +173,6 @@ importers:
         specifier: ^8.19.0
         version: 8.19.0
     devDependencies:
-      '@repo/backend-secret':
-        specifier: workspace:*
-        version: link:../../packages/backend-secret
       '@repo/db-local':
         specifier: workspace:*
         version: link:../../packages/db-local
@@ -195,19 +189,6 @@ importers:
         specifier: ^17.3.1
         version: 17.3.1
 
-  packages/backend-secret:
-    dependencies:
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   packages/db-local:
     dependencies:
       '@prisma/adapter-pg':
@@ -217,9 +198,6 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0(prisma@7.5.0(@types/react@19.2.2)(magicast@0.5.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
-      '@repo/backend-secret':
-        specifier: workspace:*
-        version: link:../backend-secret
       '@types/dotenv':
         specifier: ^8.2.3
         version: 8.2.3

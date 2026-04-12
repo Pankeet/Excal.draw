@@ -2,15 +2,21 @@ import express , {type Express} from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, SALT_ROUNDS  } from "@repo/backend-secret/dist/index.js";
+import "dotenv/config";
+import validate_user from "./middlewares/validate-user.js";
 import { prisma } from "@repo/db-local/config/prisma-config.js";
 import { User, SiginSchema } from "./zod/types.js";
-import validate_user from "./middlewares/validate-user.js";
 
 const app : Express = express();
 app.use(express.json());
 app.use(cors());
 
+if (!process.env.JWT_SECRET || !process.env.SALT_ROUNDS) {
+  throw new Error("env vars are not defined");
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 
 // SignUp Endpoint Completed (✔️)
 app.post("/api/v1/signup", async (req , res) => {
@@ -51,7 +57,6 @@ app.post("/api/v1/signup", async (req , res) => {
     }
 });
 
-
 // SigIn Endpoint Completed (✔️)
 app.post("/api/v1/signin", async (req , res) => {
     const signDetails = SiginSchema.safeParse(req.body);
@@ -70,7 +75,7 @@ app.post("/api/v1/signin", async (req , res) => {
             for (const user of findUser){
                 const password_cmp = await bcrypt.compare(password, user.password);
                 if(password_cmp) {
-                    const token = jwt.sign({userId : user.id,email : user.email},JWT_SECRET,{"expiresIn": '7d'});
+                    const token = jwt.sign({userId : user.id,email : user.email},JWT_SECRET,{"expiresIn": '3d'});
                     return res.status(200).json({
                         message : "Signin Successful",
                         token : token
