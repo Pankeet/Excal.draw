@@ -6,8 +6,7 @@
     "dev": "concurrently -n DB,HTTP,WS,FE -c green,blue,yellow,magenta \"pnpm --filter @repo/db-local@1.0.0 dev\" \"pnpm --filter http-server dev\" \"pnpm --filter ws-server dev\" \"pnpm --filter excal_fe dev\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types",
-    "preinstall": "corepack enable && corepack prepare pnpm@8.15.6 --activate"
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
@@ -15,7 +14,7 @@
     "turbo": "^2.8.20",
     "typescript": "5.9.2"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=18"
   }

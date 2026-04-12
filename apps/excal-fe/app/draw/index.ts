@@ -162,7 +162,7 @@ export function initDraw(
             type: "text",
             x: pos.x,
             y: pos.y,
-            text
+            text,
           };
 
           exsistingshapes.push(shape);
