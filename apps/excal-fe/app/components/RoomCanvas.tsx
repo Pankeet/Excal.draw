@@ -25,23 +25,22 @@ export default function RoomCanvas({roomId} : Readonly<{roomId : string}>){
 
     },[roomId,token])
   
-  if(!socket){
-    return (
-      <div className="flex justify-center items-center">
-        Cannot connect to server ! Please try again later 
-      </div>
-    )
-  }
-
+    if(!socket){
+      return (
+        <div className="flex justify-left w-full text-2xl text-red-400">
+          Connecting....
+        </div>
+      )
+    }
+    
    if(!token) {
       return (
-        <div className="flex justify-center items-center">  
+        <div className="flex justify-center items-center h-screen text-xl text-red-800">  
           Please login first to access the chat room.        
         </div>
       )
     }
 
-  
   return (
     <Canvas roomId={roomId} socket={socket} token={token} />
   )

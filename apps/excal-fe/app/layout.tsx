@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Excal.com",
+  title: "Excal.draw",
   description: "Curated by Next Devs",
 };
 

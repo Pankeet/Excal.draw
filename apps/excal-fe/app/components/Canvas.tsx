@@ -1,23 +1,29 @@
 import { useEffect, useRef , useState } from "react";
-import { initDraw } from "../draw";
 import IconButton from "./IconButton";
 import { Circle, Pencil , RectangleHorizontal, Type } from "lucide-react";
+import { DrawFunction } from "../draw/Draw";
 
 type Shape = "circle" | "rect" | "text" | "pencil" ;
 
 export default function Canvas({roomId,socket,token} : Readonly<{roomId : string; socket:WebSocket; token : string}>){
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const drawRef = useRef<DrawFunction | null>(null);
     const [selectedTool , setselectedTool ] = useState<Shape>("rect");
-    const toolRef = useRef<Shape>("rect");
 
     useEffect(() => {
-      const canvas = canvasRef.current;
-      if(canvas) {
-        toolRef.current = selectedTool;
-        const cleanup = initDraw(canvas,roomId,socket,token,toolRef.current);
-        return cleanup;
+      if(canvasRef.current) {
+        const draw = new DrawFunction(canvasRef.current,roomId,token,socket);
+        drawRef.current = draw;
+        draw.init();
+        return () => {
+          draw.destroy();
+        };
       } 
-    },[roomId,socket,token,selectedTool]); 
+    },[roomId,socket,token]); 
+
+    useEffect(() => {
+      drawRef.current?.setTool(selectedTool);
+    },[selectedTool])
 
    return (
     <div className="overflow-hidden">
