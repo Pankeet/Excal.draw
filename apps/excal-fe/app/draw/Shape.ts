@@ -16,6 +16,5 @@ export type Shape = {
   text: string
 } | {
   type : "pencil",
-  x : number,
-  y : number
+  points : { x : number , y : number}[]
 };

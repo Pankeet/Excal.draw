@@ -10,25 +10,52 @@ export default function Canvas({roomId,socket,token} : Readonly<{roomId : string
     const drawRef = useRef<DrawFunction | null>(null);
     const [selectedTool , setselectedTool ] = useState<Shape>("rect");
 
-    useEffect(() => {
-      if(canvasRef.current) {
-        const draw = new DrawFunction(canvasRef.current,roomId,token,socket);
-        drawRef.current = draw;
-        draw.init();
-        return () => {
-          draw.destroy();
-        };
-      } 
-    },[roomId,socket,token]); 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      drawRef.current?.preCanvas();
+  };
+
+    const draw = new DrawFunction(canvas, roomId, token, socket);
+    drawRef.current = draw;
+    draw.init();
+
+    window.addEventListener("resize", resize);
+
+    return () => {
+      draw.destroy();
+      window.removeEventListener("resize", resize);
+    };
+  }, [roomId, socket, token]);
 
     useEffect(() => {
       drawRef.current?.setTool(selectedTool);
     },[selectedTool])
 
+    const getCursor = (tool: Shape): React.CSSProperties["cursor"] => {
+      switch (tool) {
+        case "text":
+          return "text";
+        case "pencil":
+          return "url('/pencil.png') 4 30, auto";
+        default:
+          return "crosshair";
+    }
+  };
    return (
     <div className="overflow-hidden">
       <TopBar activated={selectedTool} setactivated={setselectedTool}/>
-      <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight}/>
+      <canvas 
+        ref={canvasRef} 
+        width={window.innerWidth} 
+        height={window.innerHeight}
+        style={{cursor : getCursor(selectedTool)}}
+        />
     </div>
   );
 }

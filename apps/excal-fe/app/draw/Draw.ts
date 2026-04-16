@@ -18,6 +18,7 @@ export class DrawFunction {
     protected clicked: boolean = false;
     protected startX : number;
     protected startY :  number; 
+    protected pencilPoints : { x : number , y : number}[] = [];
 
     constructor(canvas : HTMLCanvasElement, roomId : string , token : string , socket : WebSocket){
         this.canvas = canvas;
@@ -103,7 +104,7 @@ export class DrawFunction {
         return input;
     }
 
-    protected preCanvas(){
+    preCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = "black";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -115,22 +116,36 @@ export class DrawFunction {
                 this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
 
-            if(shape.type === "circle"){
+            else if(shape.type === "circle"){
                 this.ctx.beginPath();
                 this.ctx.arc(shape.x, shape.y, shape.radius, 0, Math.PI * 2);
                 this.ctx.stroke();
             }
 
-            if(shape.type === "text"){
+            else if(shape.type === "text"){
                 this.ctx.font = "16px Arial";
                 this.ctx.fillStyle = "white";
                 this.ctx.fillText(shape.text, shape.x, shape.y);
             }
+
+            else if(shape.type === "pencil"){
+                this.ctx.beginPath();
+                shape.points.forEach((point,i) => {
+                    if(i === 0){
+                        this.ctx.moveTo(point.x, point.y);
+                    } else {
+                        this.ctx.lineTo(point.x, point.y);
+                    }
+                });
+                this.ctx.strokeStyle = "white";
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+            }
         })
     }
-
+    
     protected mouseHandler(){
-        this.canvas.style.cursor = this.selectedTool === "text" ? "text" : "crosshair";
+
         this.handleMouseDown = (e: MouseEvent) => {
             this.clicked = true;
             const pos = this.getMousePos(e);
@@ -170,6 +185,10 @@ export class DrawFunction {
               };
               input.addEventListener("blur", removeInput);
             }
+
+            if(this.selectedTool === "pencil"){
+                this.pencilPoints = [pos];
+            }
           };
         
         this.handleMouseUp = (e: MouseEvent) => {
@@ -187,6 +206,7 @@ export class DrawFunction {
                     height,
                 };
             }
+
             else if(this.selectedTool === "circle"){
                 const centerX = this.startX + width / 2;
                 const centerY = this.startY + height / 2;
@@ -198,6 +218,13 @@ export class DrawFunction {
                     y : centerY,
                     radius : radius
                 }
+            }
+
+            else if(this.selectedTool === "pencil"){
+                this.shape = {
+                    type : "pencil",
+                    points : this.pencilPoints
+                };
             }
 
             else {
@@ -215,6 +242,7 @@ export class DrawFunction {
             const width = pos.x - this.startX;
             const height = pos.y - this.startY;
             this.preCanvas();
+
             if(this.selectedTool === "rect"){
                 this.ctx.strokeStyle = "white";
                 this.ctx.lineWidth = 2;
@@ -229,6 +257,16 @@ export class DrawFunction {
                 this.ctx.strokeStyle = "white";
                 this.ctx.lineWidth = 2;
                 this.ctx.stroke();
+            }
+            else if(this.selectedTool === "pencil"){
+                this.pencilPoints.push(pos);
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.startX, this.startY);
+                this.ctx.lineTo(pos.x, pos.y);
+                this.ctx.stroke();
+
+                this.startX = pos.x;
+                this.startY = pos.y;
             }
         };
 
