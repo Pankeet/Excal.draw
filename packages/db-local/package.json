@@ -1,12 +1,12 @@
 {
   "name": "@repo/db-local",
   "version": "1.0.0",
-  "description": "",
-  "main": "config/prisma-config.js",
+  "description": "This module offers a prisma object that is configured with prisma client",
+  "main": "dist/config/prisma-config.js",
   "scripts": {
-    "config": "prisma generate",
-    "build": "tsc -b",
-    "dev": "tsc -b && node config/prisma-config.js"
+    "build": "tsc",
+    "dev": "tsc && node dist/config/prisma-config.js",
+    "generate": "prisma generate"
   },
   "keywords": [],
   "author": "",

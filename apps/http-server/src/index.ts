@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import validate_user from "./middlewares/validate-user.js";
-import { prisma } from "@repo/db-local/config/prisma-config.js";
+import { prisma } from "@repo/db-local/dist/config/prisma-config.js";
 import { User, SiginSchema } from "./zod/types.js";
 
 const app : Express = express();

@@ -6,7 +6,9 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "rootDir": ".",
+    "outDir": "dist"
   },
-  "exclude": ["node_modules", "generated"]
+  "exclude": ["node_modules","dist"]
 }
