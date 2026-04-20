@@ -16,6 +16,7 @@ export default function validate_user(req : Request, res: Response, next: NextFu
         const decode = jwt.verify(token,JWT_SECRET) as Decoder;
         if(decode){
             req.userId = decode.userId ;
+            req.email = decode.email;
             next();
         }
     }catch(err){

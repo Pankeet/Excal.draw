@@ -89,6 +89,27 @@ app.post("/api/v1/signin", async (req , res) => {
     }
 });
 
+// Get User Details for Profile
+app.get('/api/v1/user-details', validate_user, async(req,res) => {
+    const email = req.email;
+    const userId = req.userId;
+
+    try{
+        const userDetails = await prisma.user.findUniqueOrThrow({
+            where : {
+                email : email,
+                id : userId
+            }
+        });
+        return res.status(200).json(userDetails);
+    }catch(e){
+        console.error(e);
+        return res.status(404).json({
+            message : "Cannot find User"
+        })
+    }
+});
+
 // Room Creation Endpoint Completed (✔️)
 app.post("/api/v1/create-room", validate_user, async (req , res) => {
     const userId = req.userId;

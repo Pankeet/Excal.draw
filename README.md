@@ -1,9 +1,9 @@
 
-# Excal.com: Collaborative Drawing and Real-Time Communication Platform
+# Excal.draw: Collaborative Drawing and Real-Time Communication Platform
 
 ## Overview
 
-Excal.com is a sophisticated, full-stack web application that provides seamless collaborative drawing capabilities combined with integrated real-time messaging functionality. Inspired by Excalidraw, this platform enables multiple users to collaborate on a shared digital canvas whilst communicating instantaneously via an integrated chat interface. The application is architected as a monorepo utilising modern, industry-standard technologies, ensuring scalability, maintainability, and optimal performance across both client and server environments.
+Excal.draw is a sophisticated, full-stack web application that provides seamless collaborative drawing capabilities combined with integrated real-time messaging functionality. Inspired by Excal.draw, this platform enables multiple users to collaborate on a shared digital canvas whilst communicating instantaneously via an integrated chat interface. The application is architected as a monorepo utilising modern, industry-standard technologies, ensuring scalability, maintainability, and optimal performance across both client and server environments.
 
 ---
 
@@ -131,8 +131,8 @@ Ensure the following are installed on your development machine:
 #### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/Pankeet/Excal.com.git
-cd Excal.com
+git clone https://github.com/Pankeet/Excal.draw.git
+cd Excal.draw
 ```
 
 #### Step 2: Install Dependencies
@@ -575,7 +575,7 @@ pnpm run build --force
 
 ## Contributing Guidelines
 
-Contributions to Excal.com are welcomed and encouraged.
+Contributions to Excal.draw are welcomed and encouraged.
 
 
 ### Code Style Guidelines
@@ -600,5 +600,5 @@ This project is distributed under the **MIT License**. See the [LICENSE](LICENSE
 
 For inquiries, feedback, or support:
 - Email: [Contact via GitHub](https://github.com/Pankeet)
-- GitHub: [Project Repository](https://github.com/Pankeet/Excal.com)
+- GitHub: [Project Repository](https://github.com/Pankeet/Excal.draw)
 - LinkedIn: [Profile](https://www.linkedin.com/in/pankeet04/)
