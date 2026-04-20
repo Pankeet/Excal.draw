@@ -14,7 +14,7 @@ export default function Signin(){
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if(token) router.push('/pankeet');
+        if(token) router.push('/my-profile');
         else return;
     },[router]);
 

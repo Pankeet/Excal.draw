@@ -31,7 +31,7 @@ const features : feature[] = [
     },
 ]
 
-export default function AboutPage() {
+export default function LandingPage() {
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
