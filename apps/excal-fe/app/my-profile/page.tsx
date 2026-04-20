@@ -44,12 +44,18 @@ export default function ProfilePage(){
                 } else {
                     toast.error("Server not reachable!", {id:toastId});
                 }
-                //console.error(e);
-                //router.push('/signup')
+                console.error(e);
+                router.push('/signup')
             }
         };
         getUserDetails();
     },[token,router]);
+
+    function Logout(){
+        const token =  localStorage.getItem("token");
+        if(token) localStorage.removeItem("token");
+        router.push('/');
+    }
 
     return (
         <div className="flex justify-between mx-auto gap-8 w-screen h-screen bg-linear-to-br from-white to-[#eae6ff] pt-6 font-serif">
@@ -68,11 +74,11 @@ export default function ProfilePage(){
                         </div>
                     </div>
                     <div className="w-full max-h-full text-center pb-4 -mt-6 pt-10 bg-white/50 backdrop-blur-xl shadow-[0_-8px_20px_rgba(0,0,0,0.08)] rounded-3xl">
-                        <div className="text-3xl text-slate-900 mt-3 px-6">{/*userDetails?.username*/}Pankeet Manubarwala</div>
+                        <div className="text-3xl text-slate-900 mt-3 px-6">{userDetails?.username}</div>
                         <div className="text-lg text-slate-700/50 mt-2 px-6">Product Manager Google</div>
                         <div className="flex gap-5 justify-center mt-6">
-                            <Button variant="primary" size="md" name="Follow" onClick={() => {}}/>
-                            <Button variant="secondary" size="md" name="Message" onClick={() => {}} />
+                            <Button variant="primary" size="md" name="New Chat" onClick={() => {}}/>
+                            <Button variant="secondary" size="md" name="Logout" onClick={() => Logout()} />
                         </div>
                     </div>
                 </div>
