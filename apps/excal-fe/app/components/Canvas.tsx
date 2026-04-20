@@ -13,6 +13,8 @@ export default function Canvas({roomId,socket,token} : Readonly<{roomId : string
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    
+    drawRef.current?.destroy();
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -42,7 +44,7 @@ export default function Canvas({roomId,socket,token} : Readonly<{roomId : string
         case "text":
           return "text";
         case "pencil":
-          return "url('/pencil.png') 4 30, auto";
+          return "url(/pencil.png), auto";
         default:
           return "crosshair";
     }
