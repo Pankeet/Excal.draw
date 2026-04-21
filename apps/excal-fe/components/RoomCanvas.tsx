@@ -11,7 +11,7 @@ export default function RoomCanvas({roomId} : Readonly<{roomId : string}>){
     
     useEffect(() => {
       if(!token) return;
-      const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+      const ws = new WebSocket(`wss://excal-draw.onrender.com?token=${token}`);
       ws.onopen = () => {
         setsocket(ws);
         ws.send(JSON.stringify({
