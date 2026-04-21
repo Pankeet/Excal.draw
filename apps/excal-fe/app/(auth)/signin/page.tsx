@@ -29,7 +29,7 @@ export default function Signin(){
             username, password
         }
         try{
-            const res = await axios.post("http://localhost:8000/api/v1/signin", data);
+            const res = await axios.post("https://excal-draw-http-server.onrender.com/api/v1/signin", data);
             toast.success(res.data.message, {id: toastId});
             localStorage.setItem("token", res.data.token);
             router.push("/");        

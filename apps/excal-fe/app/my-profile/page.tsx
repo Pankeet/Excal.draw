@@ -32,7 +32,7 @@ export default function ProfilePage(){
         const getUserDetails = async () =>{
             const toastId = toast.loading("Loading User Profile.....")
             try{
-                const res = await axios.get("http://localhost:8000/api/v1/user-details", {
+                const res = await axios.get("https://excal-draw-http-server.onrender.com/api/v1/user-details", {
                     headers : {
                         Authorization : token
                     }

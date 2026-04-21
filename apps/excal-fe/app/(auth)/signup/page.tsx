@@ -21,7 +21,7 @@ export default function SignUp(){
         }
         const data = { username , email , password};
         try{
-            const res = await axios.post("http://localhost:8000/api/v1/signup", data);
+            const res = await axios.post("https://excal-draw-http-server.onrender.com/api/v1/signup", data);
             toast.success(res.data.message, {id : toastId});
             router.push("/");
         }catch (e: unknown) {
