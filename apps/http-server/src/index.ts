@@ -9,10 +9,7 @@ import { User, SiginSchema } from "./zod/types.js";
 
 const app : Express = express();
 app.use(express.json());
-app.use(cors({
-    origin: "https://excal-draw.vercel.app/",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-}));
+app.use(cors());
 
 if (!process.env.JWT_SECRET || !process.env.SALT_ROUNDS) {
   throw new Error("env vars are not defined");
