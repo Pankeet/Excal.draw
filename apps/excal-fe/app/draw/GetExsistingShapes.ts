@@ -2,7 +2,7 @@ import axios from "axios";
 import { Shape } from "./Shape";
 
 export async function getexsistingShapes(roomId : string , token : string ) : Promise<Shape []> {
-    const res = await axios.get(`http://localhost:8000/api/v1/chats/${roomId}`,{
+    const res = await axios.get(`https://excal-draw-http-server.onrender.com/api/v1/chats/${roomId}`,{
         headers: {
             Authorization: token
         }

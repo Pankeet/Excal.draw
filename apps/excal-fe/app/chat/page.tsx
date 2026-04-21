@@ -33,7 +33,7 @@ export default function ChatPage() {
             slug : roomName
         }
         try{
-            const res = await axios.post("http://localhost:8000/api/v1/create-room", data, {
+            const res = await axios.post("https://excal-draw-http-server.onrender.com/api/v1/create-room", data, {
                 headers : {
                     Authorization : token
                 }
@@ -58,7 +58,7 @@ export default function ChatPage() {
 
         const token = localStorage.getItem("token");
         try{
-            const res = await axios.get(`http://localhost:8000/api/v1/room/${joinRoomName}`,{
+            const res = await axios.get(`https://excal-draw-http-server.onrender.com/api/v1/room/${joinRoomName}`,{
                 headers : {
                     Authorization : token
                 }
