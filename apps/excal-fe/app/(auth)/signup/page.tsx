@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@repo/ui/button";
 import { InputBox } from "@repo/ui/input";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function SignUp(){
     const [username, setusername] = useState("");
@@ -13,6 +14,7 @@ export default function SignUp(){
     const router = useRouter();
     
     async function signup_req(){
+        const toastId = toast.loading("Creating User.....")
         if(username.trim() === "" || password.trim() === "" || email.trim() === ""){
             alert("Please enter the details to Sign Up !");
             return;
@@ -20,13 +22,13 @@ export default function SignUp(){
         const data = { username , email , password};
         try{
             const res = await axios.post("http://localhost:8000/api/v1/signup", data);
-            alert(res.data.message);
+            toast.success(res.data.message, {id : toastId});
             router.push("/");
         }catch (e: unknown) {
             if (axios.isAxiosError(e)) {
-                alert(e.response?.data?.message || "Something went wrong");
+                toast.error(e.response?.data?.message || "Something went wrong", {id:toastId});
             } else {
-                alert("Server not reachable!");
+                toast.error("Server not reachable!",{id:toastId});
             }
             console.error(e);
         }

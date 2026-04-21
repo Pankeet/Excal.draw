@@ -4,7 +4,7 @@
   "description": "This module offers a prisma object that is configured with prisma client",
   "main": "dist/config/prisma-config.js",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "dev": "tsc && node dist/config/prisma-config.js",
     "generate": "prisma generate"
   },

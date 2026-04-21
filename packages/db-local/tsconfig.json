@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "ESNext",
+    "skipLibCheck": true,
     "moduleResolution": "bundler",
     "target": "ES2023",
     "strict": true,

@@ -18,5 +18,10 @@
   "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": "24.x"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/node": "22.19.17" 
+    }
   }
 }
