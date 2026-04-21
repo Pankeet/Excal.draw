@@ -4,11 +4,20 @@
   --radius-xl: 1rem;
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
 
-  /* Your background */
+  /* background */
   --color-bg: #ece9e2;
 
   /* SignUp and Signin Card color */
-   --color-card: #eae5df;   
+  --color-card: #eae5df;   
+}
+
+.dark {
+  --color-bg: #0f172a;
+  --color-card: #1e293b;
+}
+
+* {
+  transition: background-color 0.3s, color 0.3s;
 }
 
 @layer utilities {

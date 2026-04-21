@@ -44,7 +44,7 @@ export default function Signin(){
 
     }
      return(
-            <div className="w-screen h-screen grid place-content-center bg-bg">
+            <div className="w-screen h-screen grid place-content-center bg-bg dark:text-white">
                 <div className="border rounded-xl p-10 bg-card shadow-lg">
                     <span className="lg:text-5xl md:text-2xl text-xl font-serif">Sign In</span>
                     <div className="mt-6">

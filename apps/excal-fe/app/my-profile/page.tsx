@@ -5,6 +5,7 @@ import Image from "next/image";
 import axios from "axios";
 import toast from "react-hot-toast"
 import { Button } from "@repo/ui/button";
+import Header from "@/components/Header";
 
 type UserDetails = {
     username : string,
@@ -16,7 +17,7 @@ type UserDetails = {
 
 export default function ProfilePage(){
 
-    const hoverStyles = "-mb-3 border-b-2 border-transparent hover:border-purple-700/90 hover:text-purple-700/90 transition-all duration-200"
+    const hoverStyles = "-mb-3 border-b-2 border-transparent hover:border-purple-700/90 hover:text-purple-700/90 dark:text-white transition-all duration-200"
 
     const router = useRouter();
     const [userDetails,setUserDetails] = useState<UserDetails | null>();
@@ -58,8 +59,10 @@ export default function ProfilePage(){
     }
 
     return (
-        <div className="flex justify-between mx-auto gap-8 w-screen h-screen bg-linear-to-br from-white to-[#eae6ff] pt-6 font-serif">
-            <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-lg mt-20 ml-10 h-9/12">
+    <>
+        <Header />
+        <div className="flex justify-between mx-auto gap-8 w-screen h-screen bg-linear-to-br from-white to-[#eae6ff] pt-6 font-serif dark:from-slate-700 dark:to-slate-900">
+            <div className="bg-white/60 backdrop-blur-xl dark:bg-slate-800/60 rounded-3xl shadow-lg mt-20 ml-10 h-9/12">
                 <div className="flex flex-col h-full mt-10">
                     <div className="relative flex justify-center">
                         <div className="absolute w-24 h-24 bg-purple-600/80 blur-3xl animate-pulse rounded-full"></div>
@@ -85,7 +88,7 @@ export default function ProfilePage(){
             </div>
             <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-lg mt-20 p-6 mr-24">
                 <div className="flex justify-between gap-96">
-                    <span className="text-2xl text-slate-900">My Whiteboards</span>
+                    <span className="text-2xl text-slate-900 dark:text-white">My Whiteboards</span>
                     <Button name="View all" variant="secondary" size="sm" onClick={() => router.push('/chat')} />
                 </div>
                 <div className="flex justify-start gap-5 mt-4 border-b border-slate-400/40 py-3 text-slate-900 text-lg">
@@ -106,5 +109,6 @@ export default function ProfilePage(){
                 </div>
             </div>
         </div>
+    </>
     )
 }

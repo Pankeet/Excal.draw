@@ -1,7 +1,7 @@
 import { useEffect, useRef , useState } from "react";
 import IconButton from "./IconButton";
 import { Circle, Pencil , RectangleHorizontal, Type } from "lucide-react";
-import { DrawFunction } from "../draw/Draw";
+import { DrawFunction } from "../app/draw/Draw";
 
 type Shape = "circle" | "rect" | "text" | "pencil" ;
 
@@ -62,14 +62,12 @@ export default function Canvas({roomId,socket,token} : Readonly<{roomId : string
   );
 }
 
-function TopBar({
-  activated,setactivated
-}:Readonly<{
+function TopBar({activated,setactivated}:Readonly<{
   activated : Shape,
   setactivated : (s: Shape) => void
 }>){
   return (
-    <div className="fixed top-4 left-1/2 z-20 -translate-x-1/2 border border-bg p-3 rounded-2xl">
+    <div className="fixed top-4 left-1/2 z-10 -translate-x-1/2 border border-bg p-3 rounded-2xl">
       <div className="flex gap-3">
 
         <IconButton 

@@ -5,7 +5,7 @@ import { Button } from "@repo/ui/button";
 import { InputBox } from "@repo/ui/input";
 import { useLayoutEffect, useRef , useState } from "react";
 import { useRouter } from "next/navigation";
-import Header from "../components/header";
+import Header from "../../components/Header";
 
 export default function ChatPage() {
     const containerRef = useRef<HTMLDivElement>(null);
