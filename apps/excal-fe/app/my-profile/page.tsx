@@ -59,8 +59,6 @@ export default function ProfilePage(){
     }
 
     return (
-    <>
-        <Header />
         <div className="flex justify-between mx-auto gap-8 w-screen h-screen bg-linear-to-br from-white to-[#eae6ff] pt-6 font-serif dark:from-slate-700 dark:to-slate-900">
             <div className="bg-white/60 backdrop-blur-xl dark:bg-slate-800/60 rounded-3xl shadow-lg mt-20 ml-10 h-9/12">
                 <div className="flex flex-col h-full mt-10">
@@ -109,6 +107,5 @@ export default function ProfilePage(){
                 </div>
             </div>
         </div>
-    </>
     )
 }

@@ -11,7 +11,7 @@ const app : Express = express();
 app.use(express.json());
 
 app.use(cors({
-    origin : ["http://localhost:3000","https://excal-draw.vercel.app"]
+    origin : ["http://localhost:3000","https://excal-draw.vercel.app","https://excal-draw-3zcc0zgox-pankeets-projects.vercel.app","https://excal-draw-git-main-pankeets-projects.vercel.app"]
 }));
 
 if (!process.env.JWT_SECRET || !process.env.SALT_ROUNDS) {
@@ -109,6 +109,72 @@ app.get('/api/v1/user-details', validate_user, async(req,res) => {
         console.error(e);
         return res.status(404).json({
             message : "Cannot find User"
+        })
+    }
+});
+
+// Update user profile 
+app.patch('/api/v1/profile-photo', validate_user, async (req,res) => {
+    const photoUrl = req.body.photoUrl;
+    const userId = req.userId;
+
+    try{
+        await prisma.user.update({
+            where : {
+                id : userId
+            },
+            data : {
+                avatar : photoUrl
+            }
+        })
+        return res.status(200).json({
+            message : "Profile Updated Succesfully !"
+        });
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({
+            message : "Cannot Update profile picture ! Please Try again later"
+        });
+    }
+});
+
+// Get all rooms users has Created
+app.get('/api/v1/user-rooms/', validate_user, async (req,res) => {
+    const userId = req.userId;
+
+    try{
+        const userRooms = await prisma.room.findMany({
+            where : {
+                adminId : userId
+            }
+        });
+
+        return res.status(200).json(userRooms);
+
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({
+            message : "Cannot load rooms ! Please Try again later"
+        })
+    }
+});
+
+// Delete Room 
+app.delete('/api/v1/room/:slug', validate_user , async (req , res) => {
+    const slug = req.params.slug as string;
+    try{
+        await prisma.room.delete({
+            where : {
+                slug : slug
+            }
+        })
+        return res.status(200).json({
+            message : `${slug} Deleted`
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({
+            message : "Cannot delete room ! Please Try again later"
         })
     }
 });
