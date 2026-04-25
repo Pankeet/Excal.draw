@@ -1,26 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
 import axios from "axios";
 import toast from "react-hot-toast"
-import { Button } from "@repo/ui/button";
-import Header from "@/components/Header";
 
-type UserDetails = {
-    username : string,
-    email : string,
-    avatar : string,
-    rooms : string[],
-    chats : string[]
-}
+import { Button } from "@repo/ui/button";
+
+import { UserDetails , RoomDetails} from "./ProfilePageTypes";
+import RoomList from "./RoomCard";
 
 export default function ProfilePage(){
 
     const hoverStyles = "-mb-3 border-b-2 border-transparent hover:border-purple-700/90 hover:text-purple-700/90 dark:text-white transition-all duration-200"
 
     const router = useRouter();
-    const [userDetails,setUserDetails] = useState<UserDetails | null>();
+    const [userDetails,setUserDetails] = useState<UserDetails | null>(null);
+    const [roomDetails,setRoomDetails] = useState<RoomDetails[] | null>(null);
     const [token] = useState<string | null>(() => {
       if(globalThis.window === undefined) return null;
       return localStorage.getItem("token");
@@ -30,23 +28,42 @@ export default function ProfilePage(){
         if(!token) return;
 
         const getUserDetails = async () =>{
-            const toastId = toast.loading("Loading User Profile.....")
+            const toastProfile = toast.loading("Loading User Profile.....")
             try{
                 const res = await axios.get("https://excal-draw-http-server.onrender.com/api/v1/user-details", {
                     headers : {
                         Authorization : token
                     }
                 });
-                toast.success("",{id:toastId});
+                toast.success("",{id:toastProfile});
                 setUserDetails(res.data);
             }catch (e: unknown) {
                 if (axios.isAxiosError(e)) {
-                    toast.error(e.response?.data?.message || "Something went wrong" , {id:toastId});
+                    toast.error(e.response?.data?.message || "Something went wrong" , {id:toastProfile});
                 } else {
-                    toast.error("Server not reachable!", {id:toastId});
+                    toast.error("Server not reachable!", {id:toastProfile});
                 }
                 console.error(e);
-                router.push('/signup')
+                router.push('/signin')
+            }
+
+            const toastRoom = toast.loading("Loading the User's rooms !");
+            try{
+                const res = await axios.get("https://excal-draw-http-server.onrender.com/api/v1/user-rooms", {
+                    headers : {
+                        Authorization : token
+                    }
+                });
+                toast.success("",{id: toastRoom});
+                setRoomDetails(res.data);
+            }catch (e: unknown) {
+                if (axios.isAxiosError(e)) {
+                    toast.error(e.response?.data?.message || "Something went wrong" , {id:toastRoom});
+                } else {
+                    toast.error("Server not reachable!", {id:toastRoom});
+                }
+                console.error(e);
+                router.push('/')
             }
         };
         getUserDetails();
@@ -103,6 +120,9 @@ export default function ProfilePage(){
                 <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-lg py-10 px-3">
                     <div className="text-black text-xl">
                         Recent Whiteboards
+                    </div>
+                    <div>
+                        <RoomList roomDetails={roomDetails} token={token ?? ""} />
                     </div>
                 </div>
             </div>

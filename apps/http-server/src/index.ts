@@ -92,7 +92,7 @@ app.post("/api/v1/signin", async (req , res) => {
     }
 });
 
-// Get User Details for Profile
+// Get User Details for User Profile
 app.get('/api/v1/user-details', validate_user, async(req,res) => {
     const email = req.email;
     const userId = req.userId;
@@ -138,7 +138,7 @@ app.patch('/api/v1/profile-photo', validate_user, async (req,res) => {
     }
 });
 
-// Get all rooms users has Created
+// Get all the rooms that a users has Created
 app.get('/api/v1/user-rooms/', validate_user, async (req,res) => {
     const userId = req.userId;
 
@@ -169,7 +169,7 @@ app.delete('/api/v1/room/:slug', validate_user , async (req , res) => {
             }
         })
         return res.status(200).json({
-            message : `${slug} Deleted`
+            message : `Deleted room ${slug}`
         })
     }catch(err){
         console.error(err);
