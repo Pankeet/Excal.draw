@@ -1,16 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
-import axios from "axios";
-import toast from "react-hot-toast"
-
 import { Button } from "@repo/ui/button";
-
 import { UserDetails , RoomDetails} from "./ProfilePageTypes";
 import RoomList from "./RoomCard";
+import { getUserRoomDetails, getUserDetails } from "./fetchUserDetails";
+
 
 export default function ProfilePage(){
 
@@ -24,49 +20,26 @@ export default function ProfilePage(){
       return localStorage.getItem("token");
     });
 
+
     useEffect(() => {
         if(!token) return;
 
-        const getUserDetails = async () =>{
-            const toastProfile = toast.loading("Loading User Profile.....")
-            try{
-                const res = await axios.get("https://excal-draw-http-server.onrender.com/api/v1/user-details", {
-                    headers : {
-                        Authorization : token
-                    }
-                });
-                toast.success("",{id:toastProfile});
-                setUserDetails(res.data);
-            }catch (e: unknown) {
-                if (axios.isAxiosError(e)) {
-                    toast.error(e.response?.data?.message || "Something went wrong" , {id:toastProfile});
-                } else {
-                    toast.error("Server not reachable!", {id:toastProfile});
-                }
-                console.error(e);
-                router.push('/signin')
+        const getUser = async () => {
+            const data = await getUserDetails(token);
+            if(data) setUserDetails(data)
+            else {
+                localStorage.removeItem("token");
+                router.push('/signin');
             }
+        }
 
-            const toastRoom = toast.loading("Loading the User's rooms !");
-            try{
-                const res = await axios.get("https://excal-draw-http-server.onrender.com/api/v1/user-rooms", {
-                    headers : {
-                        Authorization : token
-                    }
-                });
-                toast.success("",{id: toastRoom});
-                setRoomDetails(res.data);
-            }catch (e: unknown) {
-                if (axios.isAxiosError(e)) {
-                    toast.error(e.response?.data?.message || "Something went wrong" , {id:toastRoom});
-                } else {
-                    toast.error("Server not reachable!", {id:toastRoom});
-                }
-                console.error(e);
-                router.push('/')
-            }
-        };
-        getUserDetails();
+        const getUserRooms = async () => {
+            const data = await getUserRoomDetails(token);
+            if(data) setRoomDetails(data);
+        }
+
+        getUser();
+        getUserRooms();
     },[token,router]);
 
     function Logout(){
@@ -122,7 +95,10 @@ export default function ProfilePage(){
                         Recent Whiteboards
                     </div>
                     <div>
-                        <RoomList roomDetails={roomDetails} token={token ?? ""} />
+                        <RoomList roomDetails={roomDetails} token={token ?? ""} getUserRoomDetails={async () => {
+                            const data = await getUserRoomDetails(token);
+                            setRoomDetails(data);
+                        }}/>
                     </div>
                 </div>
             </div>
