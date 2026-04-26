@@ -1,5 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import { FaTrashAlt } from "react-icons/fa";
 import { RoomDetails } from "./ProfilePageTypes";
 
@@ -32,6 +33,30 @@ async function deleteThisRoom(slug : string, token: string ){
 
 export default function RoomList({roomDetails,token, getUserRoomDetails} : props){
 
+    const router = useRouter();
+
+    async function joinRoom(roomName : string){
+        const joiningRoom = toast.loading(`Opening ${roomName}...`);
+        try{
+                const res = await axios.get(`https://excal-draw-http-server.onrender.com/api/v1/room/${roomName}`,{
+                    headers : {
+                        Authorization : token
+                    }
+                });
+                toast.success("",{id : joiningRoom})
+                return res.data.roomId;
+            }catch (e: unknown) {
+                if (axios.isAxiosError(e)) {
+                    toast.error(e.response?.data?.message || "Something went wrong" , {id : joiningRoom});
+                } else {
+                    toast.error("Server not reachable!", {id : joiningRoom});
+                }
+                console.error(e);
+                return null
+            }
+    }
+
+
     return (
         <table className="mt-6 w-full text-center border-separate border-spacing-y-4 dark:text-black">
             <thead>
@@ -45,7 +70,12 @@ export default function RoomList({roomDetails,token, getUserRoomDetails} : props
                 {roomDetails?.map((room) => (
                     <tr key={room.slug}>
                         <td>
-                            {room.slug}
+                            <button className="cursor-pointer hover:border-b" onClick={async () => {
+                                const roomId = await joinRoom(room.slug);
+                                if(roomId) router.push(`/chat/${roomId}`)
+                                }}>
+                                    {room.slug}
+                            </button>
                         </td>
                         <td>
                             {room.createdAt.toLocaleString()}

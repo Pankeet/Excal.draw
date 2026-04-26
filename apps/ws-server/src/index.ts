@@ -80,6 +80,8 @@ function handleLeave(ws : WebSocket, userId : string, user : UserData, roomId : 
       room.delete(userId);
       user.rooms.delete(roomId);
 
+      if (room.size === 0) rooms.delete(roomId);
+
       ws.send(JSON.stringify({ type: "left", roomId: roomId }));
 }
 
@@ -95,7 +97,7 @@ async function handleChat(ws : WebSocket, userId : string, user : UserData, room
 
   try{
     const msg = JSON.parse(message);
-    if(msg.width === 0 || msg.heigth === 0 || msg.radius === 0) return;
+    if(msg.width === 0 || msg.height === 0 || msg.radius === 0) return;
   }catch(e){
     console.error(e);
     return sendError(ws, "Invalid message format");
@@ -139,7 +141,8 @@ wss.on("connection", (ws, request) => {
     return;
   }
 
-  const queryParams = new URLSearchParams(url.split("?")[1]);
+  const query = url.includes("?") ? url.split("?")[1] : "";
+  const queryParams = new URLSearchParams(query);
   const token = queryParams.get("token") ?? "";
   const userId = checkUser(token);
 
@@ -161,19 +164,25 @@ if (existingUser) {
 
   ws.on("message", async (data) => {
     handleMessage(ws,userId,data);
+  });
 
-  ws.on("close", () => {
+   ws.on("close", () => {
     const user = users.get(userId);
     if (!user) return;
     user.sockets.delete(ws);
 
     if (user.sockets.size === 0) {
       for (const roomId of user.rooms) {
-        rooms.get(roomId)?.delete(userId);
+        const room = rooms.get(roomId);
+        if (!room) continue;
+
+        room.delete(userId);
+        if (room.size === 0) {
+          rooms.delete(roomId);
+        }
       }
       users.delete(userId);
     }
-  });
   });
 });
 

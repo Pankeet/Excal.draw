@@ -1,7 +1,8 @@
 import { useEffect, useRef , useState } from "react";
 import IconButton from "./IconButton";
-import { Circle, Pencil , RectangleHorizontal, Type } from "lucide-react";
+import { Circle, Pencil , RectangleHorizontal, Type, ArrowLeft } from "lucide-react";
 import { DrawFunction } from "../app/draw/Draw";
+import { useRouter } from "next/navigation";
 
 type Shape = "circle" | "rect" | "text" | "pencil" ;
 
@@ -9,6 +10,7 @@ export default function Canvas({roomId,socket,token} : Readonly<{roomId : string
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const drawRef = useRef<DrawFunction | null>(null);
     const [selectedTool , setselectedTool ] = useState<Shape>("rect");
+    const router = useRouter();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -51,21 +53,32 @@ export default function Canvas({roomId,socket,token} : Readonly<{roomId : string
   };
    return (
     <div className="overflow-hidden">
-      <TopBar activated={selectedTool} setactivated={setselectedTool}/>
+      <TopBar activated={selectedTool} setactivated={setselectedTool} />
       <canvas 
         ref={canvasRef} 
         width={window.innerWidth} 
         height={window.innerHeight}
         style={{cursor : getCursor(selectedTool)}}
         />
+       <button onClick={() => {
+            socket.send(JSON.stringify({
+              type : "join",
+              roomId : roomId
+            }));
+            router.push('/chat');
+          }}
+          className="cursor-pointer text-white fixed bottom-4 right-10 border p-1">
+            <ArrowLeft />
+          </button>
     </div>
   );
 }
 
 function TopBar({activated,setactivated}:Readonly<{
   activated : Shape,
-  setactivated : (s: Shape) => void
+  setactivated : (s: Shape) => void,
 }>){
+
   return (
     <div className="fixed top-4 left-1/2 z-10 -translate-x-1/2 border border-bg p-3 rounded-2xl">
       <div className="flex gap-3">
